@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="android:statusBarColor">@color/gray</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="AppToolbar" parent="Theme.AppCompat.NoActionBar">
+
+    </style>
+
+    <!-- FullScreen Only -->
+    <style name="FullScreenTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <!-- DetailActivity -->
+    <style name="DetailStyle" parent="FullScreenTheme">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!-- SplashActivity (<- DetailStyle) -->
+    <style name="SplashStyle" parent="FullScreenTheme">
+        <item name="android:windowBackground">@drawable/ic_launcher_background</item>
+    </style>
+
+    <!-- Toolbar Font -->
+    <style name="toolbar_title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:typeface">@font/font</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Navigation Drawer Layout -->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Dialog -->
+    <style name="AlertDialogStyleLight" parent="Base.Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/white</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <style name="AlertDialogStyleDark" parent="Base.Theme.MaterialComponents.Dialog.Alert">
+        <item name="android:colorAccent">@color/white</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
+
+</resources>

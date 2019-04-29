@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="activity"
+            type="project.pentacore.notebook.view.MainActivity" />
+    </data>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/dl_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:overScrollMode="never"
+        tools:openDrawer="start">
+
+        <include
+            android:id="@+id/view_include_main"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            layout="@layout/layout_main"/>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nv_main"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/black"
+            android:fitsSystemWindows="true"
+            android:overScrollMode="never"
+            app:headerLayout="@layout/layout_drawer_header"
+            app:menu="@menu/menu_drawer"/>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>
+
