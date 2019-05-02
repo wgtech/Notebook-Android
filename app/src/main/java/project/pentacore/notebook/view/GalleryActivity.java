@@ -25,12 +25,10 @@ import java.io.File;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityGalleryBinding;
-import project.pentacore.notebook.model.NotebookTokenizerInterface;
+import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.tools.Constants;
-import project.pentacore.notebook.tools.ImageSenderInterface;
 import project.pentacore.notebook.tools.PermissionsActivity;
 import project.pentacore.notebook.tools.RetrofitBuilder;
 import project.pentacore.notebook.tools.UriFilePathConverter;
@@ -70,17 +68,15 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // 권한
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (requestCode == Constants.PERMISSIONS_REQUEST) {
-                if (resultCode == Constants.PERMISSIONS_RESPONSE_OK) {
-                    Log.d(TAG, "onActivityResult: 권한 획득 성공");
-                    initGallery();
-                }
+        if (requestCode == Constants.PERMISSIONS_REQUEST) {
+            if (resultCode == Constants.PERMISSIONS_RESPONSE_OK) {
+                Log.d(TAG, "onActivityResult: 권한 획득 성공");
+                initGallery();
+            }
 
-                else if (resultCode == Constants.GALLERY_RESPONSE_FAIL) {
-                    Log.d(TAG, "onActivityResult: 권한 획득 실패");
-                    finish();
-                }
+            else if (resultCode == Constants.GALLERY_RESPONSE_FAIL) {
+                Log.d(TAG, "onActivityResult: 권한 획득 실패");
+                finish();
             }
         }
 
@@ -123,21 +119,6 @@ public class GalleryActivity extends AppCompatActivity {
         gallery.setType(MediaStore.Images.Media.CONTENT_TYPE);
         gallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(gallery, Constants.GALLERY_REQUEST);
-
-        Retrofit client = new RetrofitBuilder().build(getString(R.string.server_ipv4));
-        NotebookTokenizerInterface tokenizer = client.create(NotebookTokenizerInterface.class);
-        Call<ResponseBody> call = tokenizer.getUploadToken();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "onResponse: " + response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
     }
 
     public void clickCancel(View view) {
@@ -150,20 +131,29 @@ public class GalleryActivity extends AppCompatActivity {
 
         UriFilePathConverter converter = new UriFilePathConverter(GalleryActivity.this);
 
-        Retrofit imgSender = new RetrofitBuilder().build(getString(R.string.server_ipv4));
-        ImageSenderInterface service = imgSender.create(ImageSenderInterface.class);
+        Retrofit client = new RetrofitBuilder().build(getString(R.string.server_ipv4));
+        NotebookRESTInterface api = client.create(NotebookRESTInterface.class);
 
         File file = new File(converter.getPathFromUri(preview.getData()));
         Log.d(TAG, "clickOk: " + file.getAbsolutePath());
 
+        Log.d(TAG, "clickOk: " + getIntent().getStringExtra("id") + ", "
+        + getIntent().getStringExtra("serviceType"));
         RequestBody requestImg = RequestBody.create(MediaType.parse("Content-type: multipart/formed-data"), file);
-        Call<MultipartBody.Part> call = service.postImage(
-                MultipartBody.Part.createFormData("image", file.getName(), requestImg)
+        Call<MultipartBody.Part> call = api.postImage(
+                MultipartBody.Part.createFormData("image", file.getName(), requestImg),
+                "ANDROID",
+                getIntent().getStringExtra("id"),
+                getIntent().getStringExtra("serviceType"),
+                0
         );
         call.enqueue(new Callback<MultipartBody.Part>() {
             @Override
             public void onResponse(Call<MultipartBody.Part> call, Response<MultipartBody.Part> response) {
-                Log.d(TAG, "onResponse: 성공");
+                Log.d(TAG, "onResponse: " + response.code() + ", " + response.message());
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "onResponse: 성공 " + response.message());
+                }
             }
 
             @Override
@@ -171,7 +161,6 @@ public class GalleryActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: 실패 " + t.getMessage());
             }
         });
-
 
         setResult(Constants.GALLERY_RESPONSE_OK, preview);
         finish();

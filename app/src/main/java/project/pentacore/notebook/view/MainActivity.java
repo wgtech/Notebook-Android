@@ -18,7 +18,7 @@ import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityMainBinding;
 import project.pentacore.notebook.model.UserInfo;
 import project.pentacore.notebook.tools.Constants;
-import project.pentacore.notebook.viewmodel.NASACardViewModel;
+import project.pentacore.notebook.viewmodel.NotebookCardViewModel;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setDatasIntoRecyclerView() {
 
         ViewModelProvider.AndroidViewModelFactory f = new ViewModelProvider.AndroidViewModelFactory(getApplication());
-        NASACardViewModel model = f.create(NASACardViewModel.class);
+        NotebookCardViewModel model = f.create(NotebookCardViewModel.class);
         model.getImages(dates).observe(this, nasaImageRepos -> {
             rv.setHasFixedSize(true);
             CardViewAdapter adapter = new CardViewAdapter(MainActivity.this, nasaImageRepos);
@@ -215,12 +215,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.item_nav_camera:
                 Toast.makeText(MainActivity.this, "카메라 카메라", Toast.LENGTH_SHORT).show();
                 Intent camera = new Intent(MainActivity.this, Camera2Activity.class);
+                camera.putExtra("id", getIntent().getStringExtra("id"));
+                camera.putExtra("serviceType", getIntent().getStringExtra("serviceType"));
                 startActivityForResult(camera, Constants.CAMERA_REQUEST);
                 break;
 
             case R.id.item_nav_gallery:
                 Toast.makeText(MainActivity.this, "갤러리 갤러리", Toast.LENGTH_SHORT).show();
                 Intent gallery = new Intent(MainActivity.this, GalleryActivity.class);
+                gallery.putExtra("id", getIntent().getStringExtra("id"));
+                gallery.putExtra("serviceType", getIntent().getStringExtra("serviceType"));
                 startActivityForResult(gallery, Constants.GALLERY_REQUEST);
                 break;
 

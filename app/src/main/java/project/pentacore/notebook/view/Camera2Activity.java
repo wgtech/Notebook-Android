@@ -55,8 +55,8 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityCamera2Binding;
+import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.tools.Constants;
-import project.pentacore.notebook.tools.ImageSenderInterface;
 import project.pentacore.notebook.tools.PermissionsActivity;
 import project.pentacore.notebook.tools.RetrofitBuilder;
 import retrofit2.Call;
@@ -346,7 +346,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                 save(baos.toByteArray(), System.currentTimeMillis());
 
                 // 업로드
-                //upload(System.currentTimeMillis());
+                upload(System.currentTimeMillis());
 
                 bitmap.recycle();
             }
@@ -440,7 +440,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
 
     private void upload(long timestamp) {
         Retrofit imgSender = new RetrofitBuilder().build(getString(R.string.server_ipv4));
-        ImageSenderInterface service = imgSender.create(ImageSenderInterface.class);
+        NotebookRESTInterface api = imgSender.create(NotebookRESTInterface.class);
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
                 + "/WGSampleApp/" + "/" + timestamp + ".jpg"
@@ -448,8 +448,12 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
         Log.d(TAG, "clickOk: " + file.getAbsolutePath());
 
         RequestBody requestImg = RequestBody.create(MediaType.parse("Content-type: multipart/formed-data"), file);
-        Call<MultipartBody.Part> call = service.postImage(
-                MultipartBody.Part.createFormData("image", file.getName(), requestImg)
+        Call<MultipartBody.Part> call = api.postImage(
+                MultipartBody.Part.createFormData("image", file.getName(), requestImg),
+                "ANDROID",
+                getIntent().getStringExtra("id"),
+                getIntent().getStringExtra("serviceType"),
+                0
         );
         call.enqueue(new Callback<MultipartBody.Part>() {
             @Override
