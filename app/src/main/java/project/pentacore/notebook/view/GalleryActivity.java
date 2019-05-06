@@ -3,6 +3,7 @@ package project.pentacore.notebook.view;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
+import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -140,27 +142,58 @@ public class GalleryActivity extends AppCompatActivity {
         Log.d(TAG, "clickOk: " + getIntent().getStringExtra("id") + ", "
         + getIntent().getStringExtra("serviceType"));
         RequestBody requestImg = RequestBody.create(MediaType.parse("Content-type: multipart/formed-data"), file);
-        Call<MultipartBody.Part> call = api.postImage(
-                MultipartBody.Part.createFormData("image", file.getName(), requestImg),
-                "ANDROID",
-                getIntent().getStringExtra("id"),
-                getIntent().getStringExtra("serviceType"),
-                0
-        );
-        call.enqueue(new Callback<MultipartBody.Part>() {
+
+        /**
+         * TODO
+         * 진행중 동기
+         */
+
+        new AsyncTask<Void, Void, String>() {
+            Call<MultipartBody.Part> call = api.postImage(
+                    MultipartBody.Part.createFormData("image", file.getName(), requestImg),
+                    "ANDROID",
+                    getIntent().getStringExtra("id"),
+                    getIntent().getStringExtra("serviceType"),
+                    0
+            );
+            Response res;
+
             @Override
-            public void onResponse(Call<MultipartBody.Part> call, Response<MultipartBody.Part> response) {
-                Log.d(TAG, "onResponse: " + response.code() + ", " + response.message());
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: 성공 " + response.message());
+            protected String doInBackground(Void... voids) {
+                try {
+                    res = call.execute();
+                    Log.d(TAG, "doInBackground: " +res.code() + ", " + res.message());
+                    return res.body().toString();
+
+                } catch (IOException e) {
+                    Log.d(TAG, "doInBackground: 네트워크 연결 실패");
+                    e.printStackTrace();
                 }
+                return null;
             }
 
             @Override
-            public void onFailure(Call<MultipartBody.Part> call, Throwable t) {
-                Log.d(TAG, "onFailure: 실패 " + t.getMessage());
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                Log.d(TAG, "onPostExecute: " + s);
+
             }
-        });
+        }.execute();
+
+//        call.enqueue(new Callback<MultipartBody.Part>() {
+//            @Override
+//            public void onResponse(Call<MultipartBody.Part> call, Response<MultipartBody.Part> response) {
+//                Log.d(TAG, "onResponse: " + response.code() + ", " + response.message());
+//                if (response.isSuccessful()) {
+//                    Log.d(TAG, "onResponse: 성공 " + response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MultipartBody.Part> call, Throwable t) {
+//                Log.d(TAG, "onFailure: 실패 " + t.getMessage());
+//            }
+//        });
 
         setResult(Constants.GALLERY_RESPONSE_OK, preview);
         finish();

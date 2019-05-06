@@ -18,6 +18,7 @@ import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityMainBinding;
 import project.pentacore.notebook.model.UserInfo;
 import project.pentacore.notebook.tools.Constants;
+import project.pentacore.notebook.tools.Database.DatabaseUtil;
 import project.pentacore.notebook.viewmodel.NotebookCardViewModel;
 
 import android.content.Intent;
@@ -154,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        dates.add("2019-04-08");
 //        dates.add("2019-04-09");
 //        dates.add("2019-04-10");
+
+        DatabaseUtil util = new DatabaseUtil(getString(R.string.server_ipv4));
+        util.login(info.getId(), info.getServiceType());
     }
 
     private void setDatasIntoRecyclerView() {
