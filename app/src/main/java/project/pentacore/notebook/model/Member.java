@@ -4,22 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class Member {
 
-    @SerializedName("id") private String id;
-    @SerializedName("service_type") private String serviceType;
+    @SerializedName("idx") private String idx;
 
-    public String getId() {
-        return id;
+    public String getIdx() {
+        return idx;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
+    public void setIdx(String idx) {
+        this.idx = idx;
     }
 }

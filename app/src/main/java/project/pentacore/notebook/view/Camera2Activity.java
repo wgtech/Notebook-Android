@@ -53,8 +53,10 @@ import java.util.ArrayList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityCamera2Binding;
+import project.pentacore.notebook.model.Data;
 import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.tools.Constants;
 import project.pentacore.notebook.tools.PermissionsActivity;
@@ -443,29 +445,41 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
         NotebookRESTInterface api = imgSender.create(NotebookRESTInterface.class);
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
-                + "/WGSampleApp/" + "/" + timestamp + ".jpg"
+                + "/Notebook/" + "/" + timestamp + ".jpg"
         );
         Log.d(TAG, "clickOk: " + file.getAbsolutePath());
 
         RequestBody requestImg = RequestBody.create(MediaType.parse("Content-type: multipart/formed-data"), file);
-        Call<MultipartBody.Part> call = api.postImage(
+        Call<Data> call = api.postImage(
                 MultipartBody.Part.createFormData("image", file.getName(), requestImg),
                 "ANDROID",
+                getIntent().getStringExtra("idx"),
                 getIntent().getStringExtra("id"),
                 getIntent().getStringExtra("serviceType"),
                 0
         );
-        call.enqueue(new Callback<MultipartBody.Part>() {
+        call.enqueue(new Callback<Data>() {
             @Override
-            public void onResponse(Call<MultipartBody.Part> call, Response<MultipartBody.Part> response) {
-                Log.d(TAG, "onResponse: 성공");
+            public void onResponse(Call<Data> call, Response<Data> response) {
+                if (response.isSuccessful()) {
+                    Data data = response.body();
+                    Log.d(TAG, "onResponse: " + data);
+                    for (String s:
+                            data.getSentences()) {
+                        Log.d(TAG, "onResponse: " + s);
+                    }
+                }
             }
 
             @Override
-            public void onFailure(Call<MultipartBody.Part> call, Throwable t) {
-                Log.d(TAG, "onFailure: 실패 " + t.getMessage());
+            public void onFailure(Call<Data> call, Throwable t) {
+                Log.d(TAG, "onFailure: 실패 ");
+                t.printStackTrace();
             }
         });
+
+        setResult(Constants.CAMERA_PIC_OK);
+        finish();
     }
 
     ////////////////////////////////////////////////////////////////////////

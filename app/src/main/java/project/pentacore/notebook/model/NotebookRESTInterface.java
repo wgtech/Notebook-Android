@@ -1,6 +1,7 @@
 package project.pentacore.notebook.model;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -23,9 +24,21 @@ public interface NotebookRESTInterface {
      */
     @Multipart
     @POST("/upload/")
-    Call<MultipartBody.Part> postImage(
+    Call<Data> postImage(
             @Part MultipartBody.Part body,
             @Header("User-Agent") String platform,
+            @Header("idx") String idx,
+            @Header("id") String id,
+            @Header("service-type") String serviceType,
+            @Header("publish") int publish
+    );
+
+    @Multipart
+    @POST("/upload/")
+    Call<ResponseBody> postImageTest(
+            @Part MultipartBody.Part body,
+            @Header("User-Agent") String platform,
+            @Header("idx") String idx,
             @Header("id") String id,
             @Header("service-type") String serviceType,
             @Header("publish") int publish
@@ -41,7 +54,7 @@ public interface NotebookRESTInterface {
      */
     @POST("/login/")
     @FormUrlEncoded
-    Call<Member> loginAndGetIdx(
+    Call<ResponseBody> loginAndGetIdx(
             @Header("User-Agent") String platform,
             @Field("id") String id,
             @Field("service_type") String service_type
