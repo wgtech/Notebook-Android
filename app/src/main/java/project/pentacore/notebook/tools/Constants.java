@@ -14,4 +14,9 @@ public class Constants {
     public final static int GALLERY_RESPONSE_OK = 7;
     public final static int GALLERY_RESPONSE_FAIL = 8;
 
+    public final static int CAMERA_PREVIEW_REQUEST = 9;
+    public final static int CAMERA_PREVIEW_CANCEL = 10;
+
+    public final static int UPLOAD_FAIL = 11;
+
 }

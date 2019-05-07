@@ -72,7 +72,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
 
     private ActivityCamera2Binding binding;
 
-    private Context context;
+    private Context mContext;
 
     private CameraManager manager;
     private CameraDevice camera;
@@ -84,7 +84,8 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
     private Surface surface;
     private ArrayList<Surface> surfaces;
 
-    private boolean isPreview;
+    private ProgressDialog dialog;
+    private ByteArrayOutputStream baos;
 
     // Orientation
     private static final SparseArray ORIENTATIONS = new SparseArray(4);
@@ -99,7 +100,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        context = Camera2Activity.this;
+        mContext = Camera2Activity.this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Log.d(TAG, "onCreate: Above M Version");
@@ -120,7 +121,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
 
     private void initActivity() {
         Log.d(TAG, "initActivity: ");
-        manager = (CameraManager) context.getSystemService(CAMERA_SERVICE);
+        manager = (CameraManager) mContext.getSystemService(CAMERA_SERVICE);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -182,8 +183,18 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
         if (resultCode == Constants.CAMERA_PIC_OK) {
             // 저장
             Log.d(TAG, "onActivityResult: " + data.getData().getPath());
-            setResult(resultCode);
+            setResult(resultCode, data);
             sendBroadcast(data);
+            finish();
+        }
+
+        else if (resultCode == Constants.CAMERA_PREVIEW_CANCEL) {
+            startPreview();
+        }
+
+        else if (resultCode == Constants.UPLOAD_FAIL) {
+            setResult(resultCode);
+            finish();
         }
     }
 
@@ -333,22 +344,17 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
 
         if (img != null) {
             if (reader.getImageFormat() == ImageFormat.JPEG) {
+
                 ByteBuffer buffer = img.getPlanes()[0].getBuffer();
                 byte[] bytes = new byte[buffer.capacity()];
                 buffer.get(bytes);
 
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                baos = new ByteArrayOutputStream();
 
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
                 Log.d(TAG, "onImageAvailable: 저장 준비 " + baos.toByteArray().length + " bytes.");
-
-                // 저장
-                save(baos.toByteArray(), System.currentTimeMillis());
-
-                // 업로드
-                upload(System.currentTimeMillis());
 
                 bitmap.recycle();
             }
@@ -360,7 +366,8 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
     ////////////////////////////////////////////////////////////////////////
 
     private void startPreview() {
-        isPreview = true;
+        binding.setPreviewMode(true);
+
         try {
             reqBuilder.removeTarget(reader.getSurface());
             reqBuilder.addTarget(surface);
@@ -384,7 +391,8 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
     }
 
     private void stopPreview() {
-        isPreview = false;
+        binding.setPreviewMode(false);
+
         try {
             session.stopRepeating();
             reqBuilder.removeTarget(surface);
@@ -407,9 +415,32 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////
+
+    public void clickLensChange(View view) {
+        Toast.makeText(mContext, "전후 반전", Toast.LENGTH_SHORT).show();
+    }
+
+    public void clickOk(View view) {
+        dialog = new ProgressDialog(mContext, R.style.AlertDialogProgress);
+        dialog.show();
+
+        save(baos.toByteArray(), System.currentTimeMillis());
+    }
+
+    public void clickCancel(View view) {
+        startPreview();
+    }
+
+    public void clickCapture(View view) {
+        stopPreview();
+    }
+
+    ////////////////////////////////////////////////////////
+
     private void save(byte[] bytes, long timestamp) {
         File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
-                + "/WGSampleApp/");
+                + "/Notebook/");
 
         try {
             if (!dir.exists()) {
@@ -432,6 +463,8 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
             os.flush();
             os.close();
 
+            // 저장 후 업로드
+            upload(timestamp);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -441,6 +474,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
 
 
     private void upload(long timestamp) {
+
         Retrofit imgSender = new RetrofitBuilder().build(getString(R.string.server_ipv4));
         NotebookRESTInterface api = imgSender.create(NotebookRESTInterface.class);
 
@@ -468,6 +502,10 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                             data.getSentences()) {
                         Log.d(TAG, "onResponse: " + s);
                     }
+                    dialog.dismiss();
+                    //setResult(Constants.CAMERA_PIC_OK, preview);
+
+                    finish();
                 }
             }
 
@@ -475,29 +513,12 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
             public void onFailure(Call<Data> call, Throwable t) {
                 Log.d(TAG, "onFailure: 실패 ");
                 t.printStackTrace();
+
+                dialog.dismiss();
+                setResult(Constants.UPLOAD_FAIL);
+                finish();
             }
         });
-
-        setResult(Constants.CAMERA_PIC_OK);
-        finish();
-    }
-
-    ////////////////////////////////////////////////////////////////////////
-
-    public void clickLensChange(View view) {
-        Toast.makeText(context, "전후 반전", Toast.LENGTH_SHORT).show();
-    }
-
-    public void clickCapture(View view) {
-        if (isPreview) {
-            Toast.makeText(context, "저장", Toast.LENGTH_SHORT).show();
-            stopPreview();
-
-        } else {
-            Toast.makeText(context, "촬영 재개", Toast.LENGTH_SHORT).show();
-            startPreview();
-        }
-
     }
 
 }

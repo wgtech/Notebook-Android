@@ -49,11 +49,5 @@
             app:fabSize="auto"
             app:maxImageSize="56dp"/>
 
-
-
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
