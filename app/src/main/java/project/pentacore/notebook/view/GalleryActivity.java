@@ -1,9 +1,9 @@
 package project.pentacore.notebook.view;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,13 +22,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityGalleryBinding;
 import project.pentacore.notebook.model.Data;
@@ -46,7 +43,11 @@ public class GalleryActivity extends AppCompatActivity {
     private final static String TAG = GalleryActivity.class.getSimpleName();
 
     private ActivityGalleryBinding binding;
+    private Context mContext;
     private Intent preview;
+
+    private ProgressDialog dialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(GalleryActivity.this, R.layout.activity_gallery);
         binding.setActivity(this);
+        mContext = GalleryActivity.this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String[] permissions = new String[]{
@@ -132,7 +134,8 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     public void clickOk(View view) {
-        Toast.makeText(this, "사진을 보냅니다.", Toast.LENGTH_SHORT).show();
+        dialog = new ProgressDialog(mContext, R.style.AlertDialogProgress);
+        dialog.show();
 
         UriFilePathConverter converter = new UriFilePathConverter(GalleryActivity.this);
 
@@ -164,6 +167,10 @@ public class GalleryActivity extends AppCompatActivity {
                          data.getSentences()) {
                         Log.d(TAG, "onResponse: " + s);
                     }
+                    dialog.dismiss();
+                    setResult(Constants.GALLERY_RESPONSE_OK, preview);
+
+                    finish();
                 }
             }
 
@@ -171,11 +178,14 @@ public class GalleryActivity extends AppCompatActivity {
             public void onFailure(Call<Data> call, Throwable t) {
                 Log.d(TAG, "onFailure: 실패 ");
                 t.printStackTrace();
+
+                dialog.dismiss();
+                setResult(Constants.GALLERY_RESPONSE_FAIL);
+                finish();
             }
         });
 
-        setResult(Constants.GALLERY_RESPONSE_OK, preview);
-        finish();
+
     }
 
 

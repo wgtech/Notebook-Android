@@ -56,5 +56,8 @@
         <item name="android:textSize">15dp</item>
     </style>
 
+    <style name="AlertDialogProgress" parent="AlertDialogStyleDark">
+    </style>
+
 
 </resources>

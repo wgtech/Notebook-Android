@@ -26,6 +26,7 @@
     <!-- Dialog -->
     <string name="dialog_question_logout">로그아웃 하시겠습니까?</string>
     <string name="dialog_question_delete">정말 삭제하시겠습니까?</string>
+    <string name="dialog_message_wait">잠시만 기다려 주세요...</string>
 
 
 </resources>

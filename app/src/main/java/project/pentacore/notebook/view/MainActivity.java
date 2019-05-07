@@ -3,6 +3,7 @@ package project.pentacore.notebook.view;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -25,10 +26,12 @@ import project.pentacore.notebook.viewmodel.NotebookCardViewModel;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,11 +66,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String mServiceTypeIconPath;
 
     private ArrayList<String> dates;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: MainActivity");
         super.onCreate(savedInstanceState);
+        mContext = MainActivity.this;
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setActivity(this);
@@ -314,6 +319,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == Constants.GALLERY_RESPONSE_OK) {
             // 호출
             Log.d(TAG, "onActivityResult: 사진 불러오기 성공 " + data.getData().getPath());
+            startActivity(data);
         }
 
         if (resultCode == Constants.GALLERY_RESPONSE_FAIL) {
