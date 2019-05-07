@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
@@ -50,12 +51,21 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         Log.d(TAG, "onCreate: " + i.getIntExtra("position", 99999) + ", " + i.getStringExtra("url"));
+
         String transitionTag = i.getStringExtra("transition");
+        if (transitionTag != null) binding.ivDetail.setTransitionName(transitionTag);
+
+        String idx = i.getStringExtra("idx");
+        String rename = i.getStringExtra("rename");
+        String publish = i.getStringExtra("publish");
+        String model = i.getStringExtra("model");
+        ArrayList<String> sentences = i.getStringArrayListExtra("sentences");
+
 
         Glide.with(getBaseContext())
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .load(i.getStringExtra("url"))
+                .load(getString(R.string.server_ipv4) + "/media/" + rename)
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
@@ -88,9 +98,7 @@ public class DetailActivity extends AppCompatActivity {
                 })
                 .into(binding.ivDetail);
 
-        binding.ivDetail.setTransitionName(transitionTag);
-
-        playTTS("You're listening this voice from android test app. Please enjoy my app!");
+        if (sentences != null) playTTS(sentences.get(0));
     }
 
     private void playTTS(String text) {

@@ -168,6 +168,13 @@ public class GalleryActivity extends AppCompatActivity {
                         Log.d(TAG, "onResponse: " + s);
                     }
                     dialog.dismiss();
+
+                    preview.putExtra("idx", data.getIdx());
+                    Log.d(TAG, "onResponse: " + data.getRename());
+                    preview.putExtra("rename", data.getRename());
+                    preview.putExtra("publish", data.getPublish());
+                    preview.putExtra("model", data.getModel());
+                    preview.putExtra("sentences", data.getSentences());
                     setResult(Constants.GALLERY_RESPONSE_OK, preview);
 
                     finish();

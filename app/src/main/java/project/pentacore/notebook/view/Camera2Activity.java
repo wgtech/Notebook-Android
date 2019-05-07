@@ -61,6 +61,7 @@ import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.tools.Constants;
 import project.pentacore.notebook.tools.PermissionsActivity;
 import project.pentacore.notebook.tools.RetrofitBuilder;
+import project.pentacore.notebook.tools.UriFilePathConverter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,6 +85,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
     private Surface surface;
     private ArrayList<Surface> surfaces;
 
+    private Intent preview;
     private ProgressDialog dialog;
     private ByteArrayOutputStream baos;
 
@@ -474,13 +476,17 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
 
 
     private void upload(long timestamp) {
-
         Retrofit imgSender = new RetrofitBuilder().build(getString(R.string.server_ipv4));
         NotebookRESTInterface api = imgSender.create(NotebookRESTInterface.class);
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()
                 + "/Notebook/" + "/" + timestamp + ".jpg"
         );
+
+        preview = new Intent();
+        UriFilePathConverter converter = new UriFilePathConverter(Camera2Activity.this);
+        preview.setData(converter.getUriFromPath(file.getAbsolutePath()));
+
         Log.d(TAG, "clickOk: " + file.getAbsolutePath());
 
         RequestBody requestImg = RequestBody.create(MediaType.parse("Content-type: multipart/formed-data"), file);
@@ -503,8 +509,14 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                         Log.d(TAG, "onResponse: " + s);
                     }
                     dialog.dismiss();
-                    //setResult(Constants.CAMERA_PIC_OK, preview);
 
+                    preview.putExtra("idx", data.getIdx());
+                    preview.putExtra("rename", data.getRename());
+                    preview.putExtra("publish", data.getPublish());
+                    preview.putExtra("model", data.getModel());
+                    preview.putExtra("sentences", data.getSentences());
+                    setResult(Constants.GALLERY_RESPONSE_OK, preview);
+                    
                     finish();
                 }
             }

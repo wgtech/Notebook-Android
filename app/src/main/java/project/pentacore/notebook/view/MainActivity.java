@@ -319,7 +319,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == Constants.GALLERY_RESPONSE_OK) {
             // 호출
             Log.d(TAG, "onActivityResult: 사진 불러오기 성공 " + data.getData().getPath());
-            startActivity(data);
+            // ArrayList 추가
+
+            // 미리보기 화면 전환
+            Intent preview = new Intent(mContext, DetailActivity.class);
+            preview.putExtras(data);
+
+            startActivity(preview);
         }
 
         if (resultCode == Constants.GALLERY_RESPONSE_FAIL) {
