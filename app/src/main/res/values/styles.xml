@@ -26,6 +26,16 @@
         <item name="android:background">@color/white</item>
     </style>
 
+    <style name="DetailTextViewAutoScroll">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:backgroundTint">@color/white_transparent100</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
     <!-- SplashActivity (<- DetailStyle) -->
     <style name="SplashStyle" parent="FullScreenTheme">
         <item name="android:windowBackground">@drawable/ic_launcher_background</item>

@@ -1,5 +1,6 @@
 package project.pentacore.notebook.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.transition.AutoTransition;
 import android.transition.Explode;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -30,13 +32,15 @@ import project.pentacore.notebook.databinding.ActivityDetailBinding;
 public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
 
+    private Context mContext;
+
     private ActivityDetailBinding binding;
     private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        mContext = DetailActivity.this;
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().setAllowEnterTransitionOverlap(true);
@@ -60,7 +64,6 @@ public class DetailActivity extends AppCompatActivity {
         String publish = i.getStringExtra("publish");
         String model = i.getStringExtra("model");
         ArrayList<String> sentences = i.getStringArrayListExtra("sentences");
-
 
         Glide.with(getBaseContext())
                 .asBitmap()
@@ -90,6 +93,9 @@ public class DetailActivity extends AppCompatActivity {
                                     binding.btnDetailShare.setBackgroundTintList(ColorStateList.valueOf(titleTextColor));
                                     binding.btnDetailSound.setBackgroundTintList(ColorStateList.valueOf(titleTextColor));
                                     binding.clDetailAreaBottom.setBackgroundColor(backgroundColor);
+                                    binding.clDetailLineTop.setBackgroundColor(bodyTextColor);
+                                    binding.clDetailLineBottom.setBackgroundColor(bodyTextColor);
+                                    binding.tvDetailSentence.setTextColor(ColorStateList.valueOf(titleTextColor));
                                 }
                             });
                         }
@@ -98,7 +104,10 @@ public class DetailActivity extends AppCompatActivity {
                 })
                 .into(binding.ivDetail);
 
-        if (sentences != null) playTTS(sentences.get(0));
+        if (sentences != null) {
+            playTTS(sentences.get(0));
+            binding.tvDetailSentence.setText(sentences.get(0));
+        }
     }
 
     private void playTTS(String text) {
