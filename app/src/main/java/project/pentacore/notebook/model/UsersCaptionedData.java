@@ -1,45 +1,59 @@
 package project.pentacore.notebook.model;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * [
- *  {
- *      "idx": 58,
- *      "url": "170420266_20190508105916.jpg",
- *      "texts": "{\"texts\":[\"a suitcase with clothes and a bag on it .\"]}",
- *      "date": "2019-05-08T10:59:21.857383",
- *      "publish": false
- *   },
- *
- *   {
- *      "idx": 61,
- *      "url": "170420266_20190508111045.jpg",
- *      "texts": "{\"texts\":[\"a cup of coffee sitting next to a cup of coffee .\"]}",
- *      "date": "2019-05-08T11:10:49.246363",
- *      "publish": false
- *   }
- * ]
- */
+public class UsersCaptionedData {
 
-public class UsersCaptionedData implements Serializable {
+    private int idx;
+    private String url;
+    private ArrayList<String> texts;
+    private String date;
+    private boolean publish;
 
-    @SerializedName("idx") private int idx;
-    @SerializedName("url") private String url;
+    public static class Builder {
+        private int idx;
+        private String url;
+        private ArrayList<String> texts;
+        private String date;
+        private boolean publish;
 
-    public class Texts { // Nested Array
-        @SerializedName("texts") public ArrayList<String> texts = new ArrayList<>(1);
+        public Builder setIdx(int idx) {
+            this.idx = idx;
+            return this;
+        }
 
-        public ArrayList<String> getTexts() {
-            return texts;
+        public Builder setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder setTexts(ArrayList<String> texts) {
+            this.texts = texts;
+            return this;
+        }
+
+        public Builder setDate(String date) {
+            this.date = date;
+            return this;
+        }
+
+        public Builder setPublish(boolean publish) {
+            this.publish = publish;
+            return this;
+        }
+
+        public UsersCaptionedData build() {
+            return new UsersCaptionedData(this);
         }
     }
 
-    @SerializedName("date") private String date;
-    @SerializedName("publish") private boolean publish;
+    private UsersCaptionedData(Builder builder) {
+        this.idx = builder.idx;
+        this.publish = builder.publish;
+        this.url = builder.url;
+        this.date = builder.date;
+        this.texts = builder.texts;
+    }
 
     public int getIdx() {
         return idx;
@@ -49,6 +63,10 @@ public class UsersCaptionedData implements Serializable {
         return url;
     }
 
+    public ArrayList<String> getTexts() {
+        return texts;
+    }
+
     public String getDate() {
         return date;
     }
@@ -56,5 +74,4 @@ public class UsersCaptionedData implements Serializable {
     public boolean isPublish() {
         return publish;
     }
-
 }

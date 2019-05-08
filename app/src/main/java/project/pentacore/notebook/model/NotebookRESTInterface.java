@@ -34,17 +34,6 @@ public interface NotebookRESTInterface {
             @Header("publish") int publish
     );
 
-    @Multipart
-    @POST("/upload/")
-    Call<ResponseBody> postImageTest(
-            @Part MultipartBody.Part body,
-            @Header("User-Agent") String platform,
-            @Header("idx") String idx,
-            @Header("id") String id,
-            @Header("service-type") String serviceType,
-            @Header("publish") int publish
-    );
-
 
     /**
      * Login and Database Connectivity
@@ -62,6 +51,13 @@ public interface NotebookRESTInterface {
     );
 
 
+    /**
+     * Get Captioned Images
+     *
+     * @param platform
+     * @param idx
+     * @return
+     */
     @GET("/")
     Call<ResponseBody> getCaptionedImages(
            @Header("User-Agent") String platform,

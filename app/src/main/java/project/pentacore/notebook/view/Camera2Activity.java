@@ -509,6 +509,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                     }
                     dialog.dismiss();
 
+                    preview.putExtra("init", true);
                     preview.putExtra("idx", data.getIdx());
                     preview.putExtra("rename", data.getRename());
                     preview.putExtra("publish", data.getPublish());

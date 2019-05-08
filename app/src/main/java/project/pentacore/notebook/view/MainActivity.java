@@ -22,7 +22,6 @@ import project.pentacore.notebook.model.UserInfo;
 import project.pentacore.notebook.tools.Constants;
 import project.pentacore.notebook.tools.RetrofitBuilder;
 import project.pentacore.notebook.viewmodel.CaptionedCardViewModel;
-import project.pentacore.notebook.viewmodel.NASACardViewModel;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 

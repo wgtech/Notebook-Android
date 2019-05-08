@@ -59,11 +59,21 @@ public class DetailActivity extends AppCompatActivity {
         String transitionTag = i.getStringExtra("transition");
         if (transitionTag != null) binding.ivDetail.setTransitionName(transitionTag);
 
-        String idx = i.getStringExtra("idx");
+        boolean init = i.getBooleanExtra("init", true);
+
+        String idx = "";
         String rename = i.getStringExtra("rename");
-        boolean publish = i.getStringExtra("publish").equals("0")? false: true;
-        String model = i.getStringExtra("model");
+        boolean publish = false;
+        String model = "";
         ArrayList<String> sentences = i.getStringArrayListExtra("sentences");
+        if (init) {
+            idx = i.getStringExtra("idx");
+            publish = i.getStringExtra("publish").equals("0")? false: true;
+            model = i.getStringExtra("model");
+        } else {
+            publish = i.getBooleanExtra("publish", false);
+        }
+
 
         Glide.with(getBaseContext())
                 .asBitmap()

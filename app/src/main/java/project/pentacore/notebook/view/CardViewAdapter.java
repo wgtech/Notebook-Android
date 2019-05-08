@@ -62,7 +62,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
         Intent i = new Intent(context, DetailActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.putExtra("init", false);
         i.putExtra("position", position);
+        i.putStringArrayListExtra("sentences", data.getTexts());
         i.putExtra("rename", data.getUrl());
         i.putExtra("date", data.getDate());
         i.putExtra("publish", data.isPublish());

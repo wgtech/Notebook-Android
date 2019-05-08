@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import okhttp3.ResponseBody;
 import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.model.UsersCaptionedData;
+import project.pentacore.notebook.model.UsersCaptionedRawData;
+import project.pentacore.notebook.model.UsersCaptionedRawSentences;
 import project.pentacore.notebook.tools.RetrofitBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +51,21 @@ public class CaptionedCardViewModel extends ViewModel {
                         Log.d(TAG, "onResponse: " + body);
 
                         Gson gson = new Gson();
-                        ArrayList<UsersCaptionedData> datas = gson.fromJson(body, new TypeToken<ArrayList<UsersCaptionedData>>(){}.getType());
+                        ArrayList<UsersCaptionedRawData> rawDatas = gson.fromJson(body, new TypeToken<ArrayList<UsersCaptionedRawData>>(){}.getType());
+                        ArrayList<UsersCaptionedData> datas = new ArrayList<>(1);
+
+                        for (UsersCaptionedRawData rawData: rawDatas) {
+                            UsersCaptionedRawSentences sentences = gson.fromJson(rawData.getTexts(), new TypeToken<UsersCaptionedRawSentences>(){}.getType());
+
+                            datas.add(new UsersCaptionedData.Builder()
+                                    .setTexts(sentences.getTexts())
+                                    .setDate(rawData.getDate())
+                                    .setIdx(rawData.getIdx())
+                                    .setUrl(rawData.getUrl())
+                                    .setPublish(rawData.isPublish())
+                                    .build());
+                        }
+
                         list.setValue(datas);
 
                     } catch (IOException e) {
