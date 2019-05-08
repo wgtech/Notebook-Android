@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -32,16 +33,28 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
+
+import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
+import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.model.UsersCaptionedData;
+import project.pentacore.notebook.tools.RetrofitBuilder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewHolder> {
     private final static String TAG = CardViewAdapter.class.getSimpleName();
 
     private Context context;
     private AppCompatActivity activity;
-    private UsersCaptionedData data;
     private ArrayList<UsersCaptionedData> datas;
+
+    private Retrofit client;
+    private NotebookRESTInterface api;
+
+    private ProgressDialog dialog;
 
     public CardViewAdapter(AppCompatActivity activity, ArrayList<UsersCaptionedData> datas) {
         this.activity = activity;
@@ -51,6 +64,10 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        client = new RetrofitBuilder().build(context.getString(R.string.server_ipv4));
+        api = client.create(NotebookRESTInterface.class);
+        dialog = new ProgressDialog(activity, R.style.AlertDialogProgress);
+
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item_card, parent, false);
         return new CardViewHolder(v);
     }
@@ -58,13 +75,14 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
 
-        data = datas.get(position);
+        UsersCaptionedData data = datas.get(position);
 
         Intent i = new Intent(context, DetailActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra("init", false);
         i.putExtra("position", position);
         i.putStringArrayListExtra("sentences", data.getTexts());
+        i.putExtra("idx", data.getIdx());
         i.putExtra("rename", data.getUrl());
         i.putExtra("date", data.getDate());
         i.putExtra("publish", data.isPublish());
@@ -77,6 +95,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                 activity,
                 Pair.create(holder.cardView, holder.cardView.getTransitionName())
         );
+
 
         Glide.with(context)
                 .asBitmap()
@@ -128,10 +147,34 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (i == DialogInterface.BUTTON_POSITIVE) {
-                        datas.remove(position);
-                        notifyItemRemoved(position);
-                        notifyDataSetChanged();
-                        Toast.makeText(context, "삭제 완료", Toast.LENGTH_SHORT).show();
+                        dialog.show();
+
+                        api.deleteCaptionedImage("ANDROID", data.getIdx()).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful()) {
+                                    try {
+                                        Log.d(TAG, "onResponse: 삭제" + response.body().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    datas.remove(position);
+                                    notifyItemRemoved(position);
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+
+                                    Toast.makeText(context, "삭제 완료", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Log.d(TAG, "onFailure: 삭제 실패");
+                                t.printStackTrace();
+                            }
+                        });
+
                     }
 
                     if (i == DialogInterface.BUTTON_NEGATIVE) {
@@ -139,11 +182,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                     }
                 }
             };
-
-            /**
-             * TODO
-             * 삭제 기능 구현해야함.
-             */
 
             AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AlertDialogStyleDark);
             builder.setTitle(R.string.dialog_question_delete)

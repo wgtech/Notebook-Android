@@ -64,5 +64,13 @@ public interface NotebookRESTInterface {
            @Header("idx") int idx
     );
 
+
+    @POST("/api/delete/")
+    @FormUrlEncoded
+    Call<ResponseBody> deleteCaptionedImage(
+            @Header("User-Agent") String platform,
+            @Field("idx") int idx
+    );
+
 }
 

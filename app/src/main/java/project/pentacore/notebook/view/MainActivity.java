@@ -198,19 +198,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setDatasIntoRecyclerView() {
         CaptionedCardViewModel model = viewModelFactory.create(CaptionedCardViewModel.class);
         model.getDatas(getString(R.string.server_ipv4), mIdx).observe(this, usersCaptionedDatas -> {
-            rv.setHasFixedSize(true);
-            CardViewAdapter adapter = new CardViewAdapter(MainActivity.this, usersCaptionedDatas);
-            rv.setAdapter(adapter);
-            rv.setLayoutManager(new LinearLayoutManager(
-                    MainActivity.this, RecyclerView.VERTICAL, false));
-        });
 
-        if (dates == null || dates.size() == 0) {
-            LottieViewAdapter adapter = new LottieViewAdapter();
-            rv.setAdapter(adapter);
-            rv.setLayoutManager(new GridLayoutManager(
-                    MainActivity.this, 1));
-        }
+            // 데이터 있으면
+            if (usersCaptionedDatas == null || usersCaptionedDatas.size() == 0) {
+                LottieViewAdapter adapter = new LottieViewAdapter();
+                rv.setAdapter(adapter);
+                rv.setLayoutManager(new GridLayoutManager(
+                        MainActivity.this, 1));
+            }
+
+            // 없으면
+            else {
+                rv.setHasFixedSize(true);
+                CardViewAdapter adapter = new CardViewAdapter(MainActivity.this, usersCaptionedDatas);
+                rv.setAdapter(adapter);
+                rv.setLayoutManager(new LinearLayoutManager(
+                        MainActivity.this, RecyclerView.VERTICAL, false));
+            }
+        });
     }
 
     ///////////////////////////////////////

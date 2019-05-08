@@ -7,5 +7,6 @@
     <string name="naver_client_secret">KKLBDCiuA7</string>
 
     <string name="server_ipv4">http://192.168.22.86:8000</string>
+    <!--<string name="server_ipv4">http://192.168.103.101:8001</string>-->
 
 </resources>

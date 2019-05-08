@@ -49,13 +49,19 @@ public class CaptionedCardViewModel extends ViewModel {
                     try {
                         String body = response.body().string();
                         Log.d(TAG, "onResponse: " + body);
+                        if (body.equals("None") || body == null) {
+                            list.setValue(null);
+                            return;
+                        }
 
                         Gson gson = new Gson();
-                        ArrayList<UsersCaptionedRawData> rawDatas = gson.fromJson(body, new TypeToken<ArrayList<UsersCaptionedRawData>>(){}.getType());
                         ArrayList<UsersCaptionedData> datas = new ArrayList<>(1);
+                        ArrayList<UsersCaptionedRawData> rawDatas = gson.fromJson(body, new TypeToken<ArrayList<UsersCaptionedRawData>>() {
+                        }.getType());
 
-                        for (UsersCaptionedRawData rawData: rawDatas) {
-                            UsersCaptionedRawSentences sentences = gson.fromJson(rawData.getTexts(), new TypeToken<UsersCaptionedRawSentences>(){}.getType());
+                        for (UsersCaptionedRawData rawData : rawDatas) {
+                            UsersCaptionedRawSentences sentences = gson.fromJson(rawData.getTexts(), new TypeToken<UsersCaptionedRawSentences>() {
+                            }.getType());
 
                             datas.add(new UsersCaptionedData.Builder()
                                     .setTexts(sentences.getTexts())
