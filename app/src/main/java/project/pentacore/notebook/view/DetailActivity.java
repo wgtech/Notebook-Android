@@ -61,7 +61,7 @@ public class DetailActivity extends AppCompatActivity {
 
         String idx = i.getStringExtra("idx");
         String rename = i.getStringExtra("rename");
-        String publish = i.getStringExtra("publish");
+        boolean publish = i.getStringExtra("publish").equals("0")? false: true;
         String model = i.getStringExtra("model");
         ArrayList<String> sentences = i.getStringArrayListExtra("sentences");
 

@@ -29,6 +29,7 @@
     <style name="DetailTextViewAutoScroll">
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">marquee</item>
+        <item name="android:background">@color/white_transparent100</item>
         <item name="android:backgroundTint">@color/white_transparent100</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:focusable">true</item>
