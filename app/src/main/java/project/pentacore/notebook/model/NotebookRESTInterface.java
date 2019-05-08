@@ -5,6 +5,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -24,7 +25,7 @@ public interface NotebookRESTInterface {
      */
     @Multipart
     @POST("/upload/")
-    Call<Data> postImage(
+    Call<UserAfterCaptionedData> postImage(
             @Part MultipartBody.Part body,
             @Header("User-Agent") String platform,
             @Header("idx") String idx,
@@ -59,5 +60,13 @@ public interface NotebookRESTInterface {
             @Field("id") String id,
             @Field("service_type") String service_type
     );
+
+
+    @GET("/")
+    Call<ResponseBody> getCaptionedImages(
+           @Header("User-Agent") String platform,
+           @Header("idx") int idx
+    );
+
 }
 

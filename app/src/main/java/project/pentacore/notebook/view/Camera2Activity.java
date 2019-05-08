@@ -53,10 +53,9 @@ import java.util.ArrayList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityCamera2Binding;
-import project.pentacore.notebook.model.Data;
+import project.pentacore.notebook.model.UserAfterCaptionedData;
 import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.tools.Constants;
 import project.pentacore.notebook.tools.PermissionsActivity;
@@ -490,7 +489,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
         Log.d(TAG, "clickOk: " + file.getAbsolutePath());
 
         RequestBody requestImg = RequestBody.create(MediaType.parse("Content-type: multipart/formed-data"), file);
-        Call<Data> call = api.postImage(
+        Call<UserAfterCaptionedData> call = api.postImage(
                 MultipartBody.Part.createFormData("image", file.getName(), requestImg),
                 "ANDROID",
                 getIntent().getStringExtra("idx"),
@@ -498,11 +497,11 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                 getIntent().getStringExtra("serviceType"),
                 0
         );
-        call.enqueue(new Callback<Data>() {
+        call.enqueue(new Callback<UserAfterCaptionedData>() {
             @Override
-            public void onResponse(Call<Data> call, Response<Data> response) {
+            public void onResponse(Call<UserAfterCaptionedData> call, Response<UserAfterCaptionedData> response) {
                 if (response.isSuccessful()) {
-                    Data data = response.body();
+                    UserAfterCaptionedData data = response.body();
                     Log.d(TAG, "onResponse: " + data);
                     for (String s:
                             data.getSentences()) {
@@ -515,14 +514,14 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                     preview.putExtra("publish", data.getPublish());
                     preview.putExtra("model", data.getModel());
                     preview.putExtra("sentences", data.getSentences());
-                    setResult(Constants.GALLERY_RESPONSE_OK, preview);
+                    setResult(Constants.CAMERA_PIC_OK, preview);
                     
                     finish();
                 }
             }
 
             @Override
-            public void onFailure(Call<Data> call, Throwable t) {
+            public void onFailure(Call<UserAfterCaptionedData> call, Throwable t) {
                 Log.d(TAG, "onFailure: 실패 ");
                 t.printStackTrace();
 

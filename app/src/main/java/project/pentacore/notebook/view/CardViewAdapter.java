@@ -33,20 +33,20 @@ import androidx.core.util.Pair;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 import project.pentacore.notebook.R;
-import project.pentacore.notebook.model.NASAImageRepo;
+import project.pentacore.notebook.model.UsersCaptionedData;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewHolder> {
     private final static String TAG = CardViewAdapter.class.getSimpleName();
 
     private Context context;
     private AppCompatActivity activity;
-    private NASAImageRepo repo;
-    private ArrayList<NASAImageRepo> repos;
+    private UsersCaptionedData data;
+    private ArrayList<UsersCaptionedData> datas;
 
-    public CardViewAdapter(AppCompatActivity activity, ArrayList<NASAImageRepo> repos) {
+    public CardViewAdapter(AppCompatActivity activity, ArrayList<UsersCaptionedData> datas) {
         this.activity = activity;
         this.context = this.activity.getBaseContext();
-        this.repos = repos;
+        this.datas = datas;
     }
 
     @Override
@@ -58,12 +58,14 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
 
-        repo = repos.get(position);
+        data = datas.get(position);
 
         Intent i = new Intent(context, DetailActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra("position", position);
-        i.putExtra("url", repo.hdurl);
+        i.putExtra("rename", data.getUrl());
+        i.putExtra("date", data.getDate());
+        i.putExtra("publish", data.isPublish());
 
         String transitionTag = "transition_ltd_" + position;
         i.putExtra("transition", transitionTag);
@@ -76,7 +78,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
         Glide.with(context)
                 .asBitmap()
-                .load(repo.hdurl)
+                .load(context.getString(R.string.server_ipv4) + "/media/" + data.getUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new RequestListener<Bitmap>() {
                     @Override
@@ -115,8 +117,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                 .into(holder.ivImage);
 
 
-        holder.tvTitle.setText(repo.title);
-        holder.tvDate.setText(repo.date);
+        holder.tvTitle.setText(data.getDate());
+        holder.tvDate.setText("");
 
         holder.btnDelete.setOnClickListener(view -> {
 
@@ -124,7 +126,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (i == DialogInterface.BUTTON_POSITIVE) {
-                        repos.remove(position);
+                        datas.remove(position);
                         notifyItemRemoved(position);
                         notifyDataSetChanged();
                         Toast.makeText(context, "삭제 완료", Toast.LENGTH_SHORT).show();
@@ -135,6 +137,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                     }
                 }
             };
+
+            /**
+             * TODO
+             * 삭제 기능 구현해야함.
+             */
 
             AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AlertDialogStyleDark);
             builder.setTitle(R.string.dialog_question_delete)
@@ -149,7 +156,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     @Override
     public int getItemCount() {
-        return repos.size();
+        return datas.size();
     }
 
     @Override

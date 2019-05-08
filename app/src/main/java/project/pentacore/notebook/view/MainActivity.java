@@ -3,7 +3,6 @@ package project.pentacore.notebook.view;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -22,7 +21,8 @@ import project.pentacore.notebook.model.NotebookRESTInterface;
 import project.pentacore.notebook.model.UserInfo;
 import project.pentacore.notebook.tools.Constants;
 import project.pentacore.notebook.tools.RetrofitBuilder;
-import project.pentacore.notebook.viewmodel.NotebookCardViewModel;
+import project.pentacore.notebook.viewmodel.CaptionedCardViewModel;
+import project.pentacore.notebook.viewmodel.NASACardViewModel;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
@@ -31,7 +31,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,11 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getDrawerLayout();
         getRawData();
-        //getMainLayout();
-        //setDatasIntoRecyclerView();
     }
-
-    ///////////////////////////////////////
 
     private void getDrawerLayout() {
         binding.dlMain.closeDrawer(GravityCompat.START);
@@ -97,6 +92,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         toggle.syncState();
         binding.nvMain.setVerticalFadingEdgeEnabled(false);
+    }
+
+    ///////////////////////////////////////
+
+    private void getRawData() {
+        viewModelFactory = new ViewModelProvider.AndroidViewModelFactory(getApplication());
+        addr = getString(R.string.server_ipv4);
+        Intent i = getIntent();
+
+        Retrofit client = new RetrofitBuilder().build(addr);
+        api = client.create(NotebookRESTInterface.class);
+
+        mId = i.getStringExtra("id");
+        mEmail = i.getStringExtra("email");
+        mProfileUrl = i.getStringExtra("profileURL");
+        mServiceType = i.getStringExtra("serviceType");
+        mServiceTypeIconPath = i.getStringExtra("serviceTypeIconPath");
+
+        // idx 가져오기
+        Call<ResponseBody> call = api.loginAndGetIdx("ANDROID", mId, mServiceType);
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    mIdx = call.execute().body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return mIdx;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                mIdx = s;
+                Log.d(TAG, "onPostExecute: " + s);
+                info = new UserInfo.Builder()
+                        .id(mId)
+                        .idx(mIdx)
+                        .email(mEmail)
+                        .serviceType(mServiceType)
+                        .serviceTypeIcon(mServiceTypeIconPath)
+                        .profileURL(mProfileUrl)
+                        .build();
+
+                Log.d(TAG, "onPostExecute: " + info);
+
+
+                // 이후 리스트 가져오기
+                getMainLayout();
+                setDatasIntoRecyclerView();
+            }
+        }.execute();
     }
 
     private void getMainLayout() {
@@ -148,72 +196,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.nvMain.setNavigationItemSelectedListener(this);
     }
 
-    private void getRawData() {
-        viewModelFactory = new ViewModelProvider.AndroidViewModelFactory(getApplication());
-        addr = getString(R.string.server_ipv4);
-        Intent i = getIntent();
-
-        Retrofit client = new RetrofitBuilder().build(addr);
-        api = client.create(NotebookRESTInterface.class);
-
-        mId = i.getStringExtra("id");
-        mEmail = i.getStringExtra("email");
-        mProfileUrl = i.getStringExtra("profileURL");
-        mServiceType = i.getStringExtra("serviceType");
-        mServiceTypeIconPath = i.getStringExtra("serviceTypeIconPath");
-
-        // idx 가져오기
-        Call<ResponseBody> call = api.loginAndGetIdx("ANDROID", mId, mServiceType);
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                try {
-                    mIdx = call.execute().body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return mIdx;
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                mIdx = s;
-                Log.d(TAG, "onPostExecute: " + s);
-                info = new UserInfo.Builder()
-                        .id(mId)
-                        .idx(mIdx)
-                        .email(mEmail)
-                        .serviceType(mServiceType)
-                        .serviceTypeIcon(mServiceTypeIconPath)
-                        .profileURL(mProfileUrl)
-                        .build();
-
-                Log.d(TAG, "onPostExecute: " + info);
-                getMainLayout();
-                setDatasIntoRecyclerView();
-            }
-        }.execute();
-
-        // 추가
-        dates = new ArrayList<>(1);
-//        dates.add("2019-04-01");
-//        dates.add("2019-04-02");
-//        dates.add("2019-04-03");
-//        dates.add("2019-04-04");
-//        dates.add("2019-04-05");
-//        dates.add("2019-04-06");
-//        dates.add("2019-04-07");
-//        dates.add("2019-04-08");
-//        dates.add("2019-04-09");
-//        dates.add("2019-04-10");
-    }
-
     private void setDatasIntoRecyclerView() {
-        NotebookCardViewModel model = viewModelFactory.create(NotebookCardViewModel.class);
-        model.getImages(dates).observe(this, nasaImageRepos -> {
+        CaptionedCardViewModel model = viewModelFactory.create(CaptionedCardViewModel.class);
+        model.getDatas(getString(R.string.server_ipv4), mIdx).observe(this, usersCaptionedDatas -> {
             rv.setHasFixedSize(true);
-            CardViewAdapter adapter = new CardViewAdapter(MainActivity.this, nasaImageRepos);
+            CardViewAdapter adapter = new CardViewAdapter(MainActivity.this, usersCaptionedDatas);
             rv.setAdapter(adapter);
             rv.setLayoutManager(new LinearLayoutManager(
                     MainActivity.this, RecyclerView.VERTICAL, false));
@@ -314,17 +301,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == Constants.CAMERA_PIC_OK) {
             // 데이터 새로고침
             Log.d(TAG, "onActivityResult: 카메라 저장 성공");
+
+            // ArrayList 추가
+            setDatasIntoRecyclerView();
+
+            // 미리보기 화면 전환
+            Intent preview = new Intent(mContext, DetailActivity.class);
+            preview.putExtras(data);
+            startActivity(preview);
+        }
+
+        if (resultCode == Constants.CAMERA_PIC_FAIL) {
+
         }
 
         if (resultCode == Constants.GALLERY_RESPONSE_OK) {
             // 호출
             Log.d(TAG, "onActivityResult: 사진 불러오기 성공 " + data.getData().getPath());
+
             // ArrayList 추가
+            setDatasIntoRecyclerView();
 
             // 미리보기 화면 전환
             Intent preview = new Intent(mContext, DetailActivity.class);
             preview.putExtras(data);
-
             startActivity(preview);
         }
 

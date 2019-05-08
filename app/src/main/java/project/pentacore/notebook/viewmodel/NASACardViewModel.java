@@ -15,9 +15,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NotebookCardViewModel extends ViewModel {
+public class NASACardViewModel extends ViewModel {
 
-    private final static String TAG = NotebookCardViewModel.class.getSimpleName();
+    private final static String TAG = NASACardViewModel.class.getSimpleName();
 
     private MutableLiveData<NASAImageRepo> image;
     private ArrayList<NASAImageRepo> repos;

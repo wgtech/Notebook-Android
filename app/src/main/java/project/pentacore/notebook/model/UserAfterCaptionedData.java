@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class Data {
+public class UserAfterCaptionedData {
 
     /**
      * {
@@ -45,7 +45,7 @@ public class Data {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Data{");
+        final StringBuffer sb = new StringBuffer("UserAfterCaptionedData{");
         sb.append("idx='").append(idx).append('\'');
         sb.append(", publish='").append(publish).append('\'');
         sb.append(", rename='").append(rename).append('\'');
