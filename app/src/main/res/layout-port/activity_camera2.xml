@@ -8,6 +8,9 @@
         <variable
             name="previewMode"
             type="java.lang.Boolean" />
+        <variable
+            name="publishMode"
+            type="java.lang.Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -86,6 +89,22 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:fabSize="auto"
             app:maxImageSize="56dp"/>
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_camera_publish"
+            android:text="Publish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
+            android:background="@drawable/border_rectangle"
+            android:textColor="@color/black"
+            android:layout_marginBottom="15dp"
+            android:visibility="@{previewMode ? View.GONE : View.VISIBLE}"
+            android:clickable="@{previewMode ? false : true}"
+            android:checked="true"
+            android:onClick="@{activity::clickPublish}"
+            app:layout_constraintBottom_toTopOf="@id/fab_camera_ok"
+            app:layout_constraintRight_toRightOf="@id/fab_camera_ok"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

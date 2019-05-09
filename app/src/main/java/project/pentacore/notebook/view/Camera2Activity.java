@@ -429,6 +429,14 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
         save(baos.toByteArray(), System.currentTimeMillis());
     }
 
+    public void clickPublish(View view) {
+        if (binding.cbCameraPublish.isChecked()) {
+            Toast.makeText(this, "이 사진은 모든 사람들과 공유합니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "이 사진은 나만 봅니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void clickCancel(View view) {
         startPreview();
     }
@@ -495,7 +503,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                 getIntent().getStringExtra("idx"),
                 getIntent().getStringExtra("id"),
                 getIntent().getStringExtra("serviceType"),
-                0
+                binding.cbCameraPublish.isChecked() ? 1 : 0
         );
         call.enqueue(new Callback<UserAfterCaptionedData>() {
             @Override

@@ -9,7 +9,9 @@ import android.speech.tts.TextToSpeech;
 import android.transition.AutoTransition;
 import android.transition.Explode;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -20,6 +22,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
@@ -33,8 +36,10 @@ public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     private Context mContext;
-
     private ActivityDetailBinding binding;
+
+    private boolean publish;
+
     private TextToSpeech tts;
 
     @Override
@@ -63,7 +68,7 @@ public class DetailActivity extends AppCompatActivity {
 
         String idx = "";
         String rename = i.getStringExtra("rename");
-        boolean publish = false;
+        publish = false;
         String model = "";
         ArrayList<String> sentences = i.getStringArrayListExtra("sentences");
         if (init) {
@@ -73,6 +78,7 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             publish = i.getBooleanExtra("publish", false);
         }
+        binding.setPublishMode(publish);
 
 
         Glide.with(getBaseContext())
@@ -99,13 +105,12 @@ public class DetailActivity extends AppCompatActivity {
                                     int bodyTextColor = vibrantSwatch.getBodyTextColor();
 
                                     binding.clDetailButtons.setBackgroundColor(backgroundColor);
-                                    binding.btnDetailCloud.setBackgroundTintList(ColorStateList.valueOf(titleTextColor));
-                                    binding.btnDetailShare.setBackgroundTintList(ColorStateList.valueOf(titleTextColor));
+                                    binding.btnDetailPublish.setBackgroundTintList(ColorStateList.valueOf(titleTextColor));
                                     binding.btnDetailSound.setBackgroundTintList(ColorStateList.valueOf(titleTextColor));
                                     binding.clDetailAreaBottom.setBackgroundColor(backgroundColor);
                                     binding.clDetailLineTop.setBackgroundColor(bodyTextColor);
                                     binding.clDetailLineBottom.setBackgroundColor(bodyTextColor);
-                                    binding.tvDetailSentence.setTextColor(ColorStateList.valueOf(titleTextColor));
+                                    binding.npDetailSentence.setBackgroundColor(backgroundColor);
                                 }
                             });
                         }
@@ -115,8 +120,26 @@ public class DetailActivity extends AppCompatActivity {
                 .into(binding.ivDetail);
 
         if (sentences != null) {
+            Log.d(TAG, "onCreate: " + sentences.size());
             playTTS(sentences.get(0));
-            binding.tvDetailSentence.setText(sentences.get(0));
+
+            //binding.tvDetailSentence.setText(sentences.get(0));
+            String[] array = sentences.toArray(new String[sentences.size()]);
+            binding.npDetailSentence.setWrapSelectorWheel(false);
+            binding.npDetailSentence.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+            binding.npDetailSentence.setMinValue(0);
+            binding.npDetailSentence.setMaxValue(array.length-1);
+            binding.npDetailSentence.setDisplayedValues(array);
+            binding.npDetailSentence.setOnClickListener(v -> {
+                stopTTS();
+                playTTS(sentences.get(binding.npDetailSentence.getValue()));
+            });
+            binding.npDetailSentence.setOnScrollListener((view, scrollState) -> {
+                if (scrollState == NumberPicker.OnScrollListener.SCROLL_STATE_IDLE) {
+                    stopTTS();
+                    playTTS(sentences.get(binding.npDetailSentence.getValue()));
+                }
+            });
         }
     }
 
@@ -138,6 +161,16 @@ public class DetailActivity extends AppCompatActivity {
         if (tts.isSpeaking()) {
             tts.stop();
         }
+    }
+
+    public void clickChangePublish(View view) {
+        if (publish) {
+            Toast.makeText(this, getString(R.string.msg_publish_no), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.msg_publish_okay), Toast.LENGTH_SHORT).show();
+        }
+        publish = !publish;
+        binding.setPublishMode(publish);
     }
 
     @Override

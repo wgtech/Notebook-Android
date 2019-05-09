@@ -128,6 +128,14 @@ public class GalleryActivity extends AppCompatActivity {
         startActivityForResult(gallery, Constants.GALLERY_REQUEST);
     }
 
+    public void clickPublish(View view) {
+        if (binding.cbGalleryPublish.isChecked()) {
+            Toast.makeText(this, getString(R.string.msg_publish_okay), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.msg_publish_no), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void clickCancel(View view) {
         Toast.makeText(this, "취소했습니다.", Toast.LENGTH_SHORT).show();
         initGallery();
@@ -155,7 +163,7 @@ public class GalleryActivity extends AppCompatActivity {
                 getIntent().getStringExtra("idx"),
                 getIntent().getStringExtra("id"),
                 getIntent().getStringExtra("serviceType"),
-                0
+                binding.cbGalleryPublish.isChecked() ? 1 : 0
         );
         call.enqueue(new Callback<UserAfterCaptionedData>() {
             @Override
