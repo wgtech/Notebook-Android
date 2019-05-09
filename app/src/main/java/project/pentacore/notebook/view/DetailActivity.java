@@ -21,6 +21,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -29,8 +30,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.palette.graphics.Palette;
+
+import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
 import project.pentacore.notebook.databinding.ActivityDetailBinding;
+import project.pentacore.notebook.model.NotebookRESTInterface;
+import project.pentacore.notebook.tools.RetrofitBuilder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
@@ -38,7 +47,11 @@ public class DetailActivity extends AppCompatActivity {
     private Context mContext;
     private ActivityDetailBinding binding;
 
+    private String idx;
     private boolean publish;
+
+    private Retrofit client;
+    private NotebookRESTInterface api;
 
     private TextToSpeech tts;
 
@@ -46,6 +59,9 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = DetailActivity.this;
+
+        client = new RetrofitBuilder().build(getString(R.string.server_ipv4));
+        api = client.create(NotebookRESTInterface.class);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().setAllowEnterTransitionOverlap(true);
@@ -66,13 +82,12 @@ public class DetailActivity extends AppCompatActivity {
 
         boolean init = i.getBooleanExtra("init", true);
 
-        String idx = "";
+        idx = i.getStringExtra("idx"); // CardViewAdapter 에서 넘어온 것은 null 로 체크됨.
         String rename = i.getStringExtra("rename");
         publish = false;
         String model = "";
         ArrayList<String> sentences = i.getStringArrayListExtra("sentences");
         if (init) {
-            idx = i.getStringExtra("idx");
             publish = i.getStringExtra("publish").equals("0")? false: true;
             model = i.getStringExtra("model");
         } else {
@@ -164,13 +179,33 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void clickChangePublish(View view) {
-        if (publish) {
-            Toast.makeText(this, getString(R.string.msg_publish_no), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.msg_publish_okay), Toast.LENGTH_SHORT).show();
-        }
-        publish = !publish;
-        binding.setPublishMode(publish);
+        int index = (idx==null? getIntent().getIntExtra("idx",0) : Integer.parseInt(idx));
+        api.updatePublishedImage("ANDROID", index).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        Log.d(TAG, "onResponse: " + response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (publish) {
+                        Toast.makeText(mContext, getString(R.string.msg_publish_no), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, getString(R.string.msg_publish_okay), Toast.LENGTH_SHORT).show();
+                    }
+
+                    publish = !publish;
+                    binding.setPublishMode(publish);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(mContext, getString(R.string.msg_publish_error), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

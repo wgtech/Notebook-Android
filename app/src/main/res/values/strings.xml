@@ -16,6 +16,7 @@
     <!-- Publish -->
     <string name="msg_publish_okay">이 사진은 모든 사람들과 공유합니다.</string>
     <string name="msg_publish_no">이 사진은 나만 봅니다.</string>
+    <string name="msg_publish_error">인터넷 네트워크 상태를 확인해주세요.</string>
 
 
     <!-- CardView -->

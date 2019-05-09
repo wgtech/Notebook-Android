@@ -65,9 +65,29 @@ public interface NotebookRESTInterface {
     );
 
 
+    /**
+     * Delete the user's delete captioned image.
+     * @param platform
+     * @param idx
+     * @return
+     */
     @POST("/api/delete/")
     @FormUrlEncoded
     Call<ResponseBody> deleteCaptionedImage(
+            @Header("User-Agent") String platform,
+            @Field("idx") int idx
+    );
+
+
+    /**
+     * Update Published Image
+     * @param platform
+     * @param idx
+     * @return
+     */
+    @POST("/api/update/")
+    @FormUrlEncoded
+    Call<ResponseBody> updatePublishedImage(
             @Header("User-Agent") String platform,
             @Field("idx") int idx
     );
