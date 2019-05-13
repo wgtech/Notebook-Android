@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActivityMainBinding binding;
 
     private ActionBarDrawerToggle toggle;
-    private RecyclerView rv;
 
     private String addr;
     private NotebookRESTInterface api;
@@ -152,8 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_menu_black_36);
         getSupportActionBar().setTitle("");
 
-        rv = findViewById(R.id.rv_main);
-
         binding.viewIncludeMain.fab.setOnClickListener(view -> {
             Toast.makeText(MainActivity.this, "Click! Click!", Toast.LENGTH_SHORT).show();
         });
@@ -190,24 +187,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.nvMain.setNavigationItemSelectedListener(this);
     }
 
-    private void setDatasIntoRecyclerView() {
+    protected void setDatasIntoRecyclerView() {
         CaptionedCardViewModel model = viewModelFactory.create(CaptionedCardViewModel.class);
         model.getDatas(getString(R.string.server_ipv4), mIdx).observe(this, usersCaptionedDatas -> {
 
             // 데이터 있으면
             if (usersCaptionedDatas == null || usersCaptionedDatas.size() == 0) {
                 LottieViewAdapter adapter = new LottieViewAdapter();
-                rv.setAdapter(adapter);
-                rv.setLayoutManager(new GridLayoutManager(
+                binding.viewIncludeMain.rvMain.setAdapter(adapter);
+                binding.viewIncludeMain.rvMain.setLayoutManager(new GridLayoutManager(
                         MainActivity.this, 1));
             }
 
             // 없으면
             else {
-                rv.setHasFixedSize(true);
+                binding.viewIncludeMain.rvMain.setHasFixedSize(true);
                 CardViewAdapter adapter = new CardViewAdapter(MainActivity.this, usersCaptionedDatas);
-                rv.setAdapter(adapter);
-                rv.setLayoutManager(new LinearLayoutManager(
+                binding.viewIncludeMain.rvMain.setAdapter(adapter);
+                binding.viewIncludeMain.rvMain.setLayoutManager(new LinearLayoutManager(
                         MainActivity.this, RecyclerView.VERTICAL, false));
             }
         });

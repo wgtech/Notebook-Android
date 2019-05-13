@@ -49,7 +49,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
     private final static String TAG = CardViewAdapter.class.getSimpleName();
 
     private Context context;
-    private AppCompatActivity activity;
+    private MainActivity activity;
     private ArrayList<UsersCaptionedData> datas;
 
     private Retrofit client;
@@ -57,7 +57,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     private ProgressDialog dialog;
 
-    public CardViewAdapter(AppCompatActivity activity, ArrayList<UsersCaptionedData> datas) {
+    public CardViewAdapter(MainActivity activity, ArrayList<UsersCaptionedData> datas) {
         this.activity = activity;
         this.context = this.activity.getBaseContext();
         this.datas = datas;
@@ -154,6 +154,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                                     datas.remove(position);
                                     notifyItemRemoved(position);
                                     notifyDataSetChanged();
+                                    activity.setDatasIntoRecyclerView();
                                     dialog.dismiss();
 
                                     Toast.makeText(context, "삭제 완료", Toast.LENGTH_SHORT).show();
@@ -187,7 +188,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                     holder.cardView,
                     holder.cardView.getTransitionName()
             );
-            context.startActivity(i, compat.toBundle());
+            //context.startActivity(i, compat.toBundle());
+            context.startActivity(i);
         });
     }
 

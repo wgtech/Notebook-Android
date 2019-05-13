@@ -64,12 +64,9 @@ public class DetailActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         binding.setActivity(this);
-        binding.setPublishMode(publish);
 
         Intent intent = getIntent();
         if (intent != null) {
-            setIntent(intent);
-
             boolean init = intent.getBooleanExtra("init", true);
 
             idx = intent.getStringExtra("idx"); // CardViewAdapter 에서 넘어온 것은 null 로 체크됨.
@@ -83,6 +80,8 @@ public class DetailActivity extends AppCompatActivity {
             } else {
                 publish = intent.getBooleanExtra("publish", false);
             }
+
+            binding.setPublishMode(publish);
         }
 
 
