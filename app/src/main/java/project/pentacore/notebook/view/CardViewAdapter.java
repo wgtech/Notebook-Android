@@ -31,6 +31,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -78,7 +79,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
         UsersCaptionedData data = datas.get(position);
 
         Intent i = new Intent(context, DetailActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra("init", false);
         i.putExtra("position", position);
         i.putStringArrayListExtra("sentences", data.getTexts());
@@ -86,15 +87,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
         i.putExtra("rename", data.getUrl());
         i.putExtra("date", data.getDate());
         i.putExtra("publish", data.isPublish());
-
-        String transitionTag = "transition_ltd_" + position;
-        i.putExtra("transition", transitionTag);
-        holder.cardView.setTransitionName(transitionTag);
-
-        ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                activity,
-                Pair.create(holder.cardView, holder.cardView.getTransitionName())
-        );
 
 
         Glide.with(context)
@@ -190,7 +182,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
         });
 
         holder.cardView.setOnClickListener(view -> {
-            view.getContext().startActivity(i, compat.toBundle());
+            ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity,
+                    holder.cardView,
+                    holder.cardView.getTransitionName()
+            );
+            context.startActivity(i, compat.toBundle());
         });
     }
 

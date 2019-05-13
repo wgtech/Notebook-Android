@@ -6,11 +6,8 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.transition.AutoTransition;
-import android.transition.Explode;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -65,14 +62,6 @@ public class DetailActivity extends AppCompatActivity {
         client = new RetrofitBuilder().build(getString(R.string.server_ipv4));
         api = client.create(NotebookRESTInterface.class);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().setAllowEnterTransitionOverlap(true);
-        getWindow().setAllowReturnTransitionOverlap(true);
-        getWindow().setSharedElementEnterTransition(new AutoTransition());
-        getWindow().setSharedElementReturnTransition(new AutoTransition());
-        getWindow().setEnterTransition(new Explode());
-        getWindow().setExitTransition(new Explode());
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         binding.setActivity(this);
         binding.setPublishMode(publish);
@@ -80,11 +69,6 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             setIntent(intent);
-
-            Log.d(TAG, "onCreate: " + intent.getIntExtra("position", 99999) + ", " + intent.getStringExtra("url"));
-
-            String transitionTag = intent.getStringExtra("transition");
-            if (transitionTag != null) binding.ivDetail.setTransitionName(transitionTag);
 
             boolean init = intent.getBooleanExtra("init", true);
 
@@ -214,10 +198,9 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed: 눌렀다.");
         super.onBackPressed();
         if (tts != null) tts.shutdown();
-        finishAfterTransition();
+        supportFinishAfterTransition();
     }
 }
 

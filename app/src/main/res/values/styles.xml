@@ -25,6 +25,7 @@
 
     <!-- DetailActivity -->
     <style name="DetailStyle" parent="FullScreenTheme">
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <style name="DetailTextViewAutoScroll">

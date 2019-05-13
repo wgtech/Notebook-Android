@@ -27,6 +27,7 @@
 
     <!-- CardView -->
     <string name="delete">삭제</string>
+    <string name="transition_card_popup">card_popup</string>
 
     <!-- DrawerLayout -->
     <string name="logout">Logout</string>
