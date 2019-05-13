@@ -23,7 +23,6 @@ import com.bumptech.glide.request.target.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
@@ -59,9 +58,26 @@ public class DetailActivity extends AppCompatActivity {
     private TextToSpeech tts;
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = DetailActivity.this;
 
+        client = new RetrofitBuilder().build(getString(R.string.server_ipv4));
+        api = client.create(NotebookRESTInterface.class);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setAllowEnterTransitionOverlap(true);
+        getWindow().setAllowReturnTransitionOverlap(true);
+        getWindow().setSharedElementEnterTransition(new AutoTransition());
+        getWindow().setSharedElementReturnTransition(new AutoTransition());
+        getWindow().setEnterTransition(new Explode());
+        getWindow().setExitTransition(new Explode());
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+        binding.setActivity(this);
+        binding.setPublishMode(publish);
+
+        Intent intent = getIntent();
         if (intent != null) {
             setIntent(intent);
 
@@ -84,28 +100,6 @@ public class DetailActivity extends AppCompatActivity {
                 publish = intent.getBooleanExtra("publish", false);
             }
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mContext = DetailActivity.this;
-
-        client = new RetrofitBuilder().build(getString(R.string.server_ipv4));
-        api = client.create(NotebookRESTInterface.class);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().setAllowEnterTransitionOverlap(true);
-        getWindow().setAllowReturnTransitionOverlap(true);
-        getWindow().setSharedElementEnterTransition(new AutoTransition());
-        getWindow().setSharedElementReturnTransition(new AutoTransition());
-        getWindow().setEnterTransition(new Explode());
-        getWindow().setExitTransition(new Explode());
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
-        binding.setActivity(this);
-
-        binding.setPublishMode(publish);
 
 
         Glide.with(getBaseContext())
@@ -222,7 +216,7 @@ public class DetailActivity extends AppCompatActivity {
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed: 눌렀다.");
         super.onBackPressed();
-        tts.shutdown();
+        if (tts != null) tts.shutdown();
         finishAfterTransition();
     }
 }

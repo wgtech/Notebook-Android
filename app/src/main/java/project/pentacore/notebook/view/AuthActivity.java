@@ -69,7 +69,6 @@ public class AuthActivity extends AppCompatActivity {
 
 
     public void naverAuthClick(View view) {
-        Toast.makeText(this, "네이버 인증", Toast.LENGTH_SHORT).show();
         ObservableMap<String, String> map = new ObservableArrayMap<>();
         map.addOnMapChangedCallback(new ObservableMap.OnMapChangedCallback<ObservableMap<String, String>, String, String>() {
             @Override
@@ -92,15 +91,10 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     public void kakaoAuthClick(View view) {
-        Toast.makeText(this, "카카오 인증", Toast.LENGTH_SHORT).show();
         kakaoApp = KakaoSDKApplication.getInstance();
         kakaoApp.setActivity(this);
         kakaoApp.getKakaoAuth(KakaoSDK.getAdapter());
         finish();
-    }
-
-    public void googleAuthClick(View view) {
-        Toast.makeText(this, "구글 인증", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -25,7 +25,6 @@
 
     <!-- DetailActivity -->
     <style name="DetailStyle" parent="FullScreenTheme">
-        <item name="android:background">@color/white</item>
     </style>
 
     <style name="DetailTextViewAutoScroll">
@@ -40,7 +39,7 @@
         <item name="android:scrollHorizontally">true</item>
     </style>
 
-    <!-- SplashActivity (<- DetailStyle) -->
+    <!-- SplashActivity -->
     <style name="SplashStyle" parent="FullScreenTheme">
         <item name="android:windowBackground">@drawable/ic_launcher_background</item>
     </style>

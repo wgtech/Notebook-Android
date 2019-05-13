@@ -298,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // 미리보기 화면 전환
             Intent preview = new Intent(mContext, DetailActivity.class);
+            preview.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             preview.putExtras(data);
             startActivity(preview);
         }
@@ -315,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // 미리보기 화면 전환
             Intent preview = new Intent(mContext, DetailActivity.class);
+            preview.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             preview.putExtras(data);
             startActivity(preview);
         }
