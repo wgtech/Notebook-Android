@@ -7,6 +7,6 @@
     <changeBounds />
     <fade />
     <slide />
-    <autotransition />
+    <autoTransition />
 
 </transitionSet>

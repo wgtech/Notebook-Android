@@ -26,6 +26,16 @@
     <!-- DetailActivity -->
     <style name="DetailStyle" parent="FullScreenTheme">
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <!--<item name="android:windowEnterTransition">@transition/card_popup</item>-->
+        <!--<item name="android:windowExitTransition">@transition/card_popup</item>-->
+        <!--<item name="android:windowReenterTransition">@transition/card_popup</item>-->
+        <!--<item name="android:windowReturnTransition">@transition/card_popup</item>-->
+        <item name="android:windowSharedElementEnterTransition">@transition/card_popup</item>
+        <item name="android:windowSharedElementExitTransition">@transition/card_popup</item>
+        <item name="android:windowSharedElementReenterTransition">@transition/card_popup</item>
+        <item name="android:windowSharedElementReturnTransition">@transition/card_popup</item>
     </style>
 
     <style name="DetailTextViewAutoScroll">

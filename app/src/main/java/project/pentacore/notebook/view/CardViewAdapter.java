@@ -125,7 +125,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                         return false;
                     }
                 })
-                .thumbnail(0.01f)
+                .thumbnail(0.8f)
                 .centerCrop()
                 .into(holder.ivImage);
 
@@ -188,8 +188,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                     holder.cardView,
                     holder.cardView.getTransitionName()
             );
-            //context.startActivity(i, compat.toBundle());
-            context.startActivity(i);
+            activity.startActivity(i, compat.toBundle());
         });
     }
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
