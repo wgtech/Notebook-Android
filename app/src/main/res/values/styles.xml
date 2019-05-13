@@ -8,6 +8,7 @@
         <item name="android:statusBarColor">@color/gray</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:fontFamily">@font/font</item>
 
         <item name="android:windowContentTransitions">true</item>
     </style>
@@ -19,6 +20,7 @@
     <!-- FullScreen Only -->
     <style name="FullScreenTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowFullscreen">true</item>
+        <item name="android:fontFamily">@font/font</item>
     </style>
 
     <!-- DetailActivity -->
@@ -27,6 +29,7 @@
     </style>
 
     <style name="DetailTextViewAutoScroll">
+        <item name="android:fontFamily">@font/font</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:background">@color/white_transparent100</item>
@@ -59,11 +62,13 @@
     <!-- Dialog -->
     <style name="AlertDialogStyleLight" parent="Base.Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:colorAccent">@color/white</item>
+        <item name="android:fontFamily">@font/font</item>
         <item name="android:textSize">15dp</item>
     </style>
 
     <style name="AlertDialogStyleDark" parent="Base.Theme.MaterialComponents.Dialog.Alert">
         <item name="android:colorAccent">@color/white</item>
+        <item name="android:fontFamily">@font/font</item>
         <item name="android:textSize">15dp</item>
     </style>
 

@@ -48,12 +48,43 @@ public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
 
     private String idx;
+    private String rename;
+    private String model;
     private boolean publish;
+    private ArrayList<String> sentences;
 
     private Retrofit client;
     private NotebookRESTInterface api;
 
     private TextToSpeech tts;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null) {
+            setIntent(intent);
+
+            Log.d(TAG, "onCreate: " + intent.getIntExtra("position", 99999) + ", " + intent.getStringExtra("url"));
+
+            String transitionTag = intent.getStringExtra("transition");
+            if (transitionTag != null) binding.ivDetail.setTransitionName(transitionTag);
+
+            boolean init = intent.getBooleanExtra("init", true);
+
+            idx = intent.getStringExtra("idx"); // CardViewAdapter 에서 넘어온 것은 null 로 체크됨.
+            rename = intent.getStringExtra("rename");
+            publish = false;
+            model = "";
+            sentences = intent.getStringArrayListExtra("sentences");
+            if (init) {
+                publish = intent.getStringExtra("publish").equals("0")? false: true;
+                model = intent.getStringExtra("model");
+            } else {
+                publish = intent.getBooleanExtra("publish", false);
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,25 +105,6 @@ public class DetailActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         binding.setActivity(this);
 
-        Intent i = getIntent();
-        Log.d(TAG, "onCreate: " + i.getIntExtra("position", 99999) + ", " + i.getStringExtra("url"));
-
-        String transitionTag = i.getStringExtra("transition");
-        if (transitionTag != null) binding.ivDetail.setTransitionName(transitionTag);
-
-        boolean init = i.getBooleanExtra("init", true);
-
-        idx = i.getStringExtra("idx"); // CardViewAdapter 에서 넘어온 것은 null 로 체크됨.
-        String rename = i.getStringExtra("rename");
-        publish = false;
-        String model = "";
-        ArrayList<String> sentences = i.getStringArrayListExtra("sentences");
-        if (init) {
-            publish = i.getStringExtra("publish").equals("0")? false: true;
-            model = i.getStringExtra("model");
-        } else {
-            publish = i.getBooleanExtra("publish", false);
-        }
         binding.setPublishMode(publish);
 
 
@@ -138,7 +150,6 @@ public class DetailActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: " + sentences.size());
             playTTS(sentences.get(0));
 
-            //binding.tvDetailSentence.setText(sentences.get(0));
             String[] array = sentences.toArray(new String[sentences.size()]);
             binding.npDetailSentence.setWrapSelectorWheel(false);
             binding.npDetailSentence.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
@@ -167,7 +178,6 @@ public class DetailActivity extends AppCompatActivity {
                 tts.speak(text,
                         tts.QUEUE_FLUSH,
                         null, null);
-
             }
         });
     }

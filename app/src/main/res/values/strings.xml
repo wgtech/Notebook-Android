@@ -18,6 +18,12 @@
     <string name="msg_publish_no">이 사진은 나만 봅니다.</string>
     <string name="msg_publish_error">인터넷 네트워크 상태를 확인해주세요.</string>
 
+    <!-- menu -->
+    <string name="menu_group_upload">Upload</string>
+    <string name="menu_group_about">About</string>
+    <string name="menu_function_camera">Camera</string>
+    <string name="menu_function_gallery">Gallery</string>
+    <string name="menu_function_about">Credits</string>
 
     <!-- CardView -->
     <string name="delete">삭제</string>

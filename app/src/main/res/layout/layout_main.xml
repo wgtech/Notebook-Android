@@ -42,8 +42,7 @@
                 android:fontFamily="@font/font"
                 android:gravity="center"
                 android:layout_gravity="center"
-
-                android:text="New Project"
+                android:text="@string/app_name"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="30dp"

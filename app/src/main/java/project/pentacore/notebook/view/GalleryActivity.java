@@ -55,6 +55,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(GalleryActivity.this, R.layout.activity_gallery);
         binding.setActivity(this);
+        binding.setPublishMode(true);
         mContext = GalleryActivity.this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -129,11 +130,12 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     public void clickPublish(View view) {
-        if (binding.cbGalleryPublish.isChecked()) {
-            Toast.makeText(this, getString(R.string.msg_publish_okay), Toast.LENGTH_SHORT).show();
+        if (binding.getPublishMode()) {
+            Toast.makeText(mContext, getString(R.string.msg_publish_no), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, getString(R.string.msg_publish_no), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getString(R.string.msg_publish_okay), Toast.LENGTH_SHORT).show();
         }
+        binding.setPublishMode(!binding.getPublishMode());
     }
 
     public void clickCancel(View view) {
@@ -163,7 +165,7 @@ public class GalleryActivity extends AppCompatActivity {
                 getIntent().getStringExtra("idx"),
                 getIntent().getStringExtra("id"),
                 getIntent().getStringExtra("serviceType"),
-                binding.cbGalleryPublish.isChecked() ? 1 : 0
+                binding.getPublishMode() ? 1 : 0
         );
         call.enqueue(new Callback<UserAfterCaptionedData>() {
             @Override

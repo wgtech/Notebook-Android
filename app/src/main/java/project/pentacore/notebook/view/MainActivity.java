@@ -158,11 +158,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(MainActivity.this, "Click! Click!", Toast.LENGTH_SHORT).show();
         });
 
-        binding.viewIncludeMain.tvToolbarTitle.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "제목 클릭", Toast.LENGTH_SHORT).show();
-        });
-
-
         View nav = binding.nvMain.getHeaderView(0);
 
         AppCompatButton btn = nav.findViewById(R.id.btn_drawer_logout);
@@ -234,12 +229,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) { // Account Icon
-            case R.id.account_item:
-                Snackbar.make(findViewById(R.id.dl_main), "계정 확인바랍니다.", Snackbar.LENGTH_LONG).show();
-                break;
-
             default: // Navigation Icon
-                Toast.makeText(this, "Navigation Button", Toast.LENGTH_SHORT).show();
                 if (binding.dlMain.isDrawerOpen(GravityCompat.START)) {
                     binding.dlMain.closeDrawer(GravityCompat.START);
                 } else {
@@ -255,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.item_nav_camera:
-                Toast.makeText(MainActivity.this, "카메라 카메라", Toast.LENGTH_SHORT).show();
                 Intent camera = new Intent(MainActivity.this, Camera2Activity.class);
                 camera.putExtra("idx", info.getIdx());
                 camera.putExtra("id", info.getId());
@@ -264,7 +253,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.item_nav_gallery:
-                Toast.makeText(MainActivity.this, "갤러리 갤러리", Toast.LENGTH_SHORT).show();
                 Intent gallery = new Intent(MainActivity.this, GalleryActivity.class);
                 gallery.putExtra("idx", info.getIdx());
                 gallery.putExtra("id", info.getId());
@@ -272,8 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivityForResult(gallery, Constants.GALLERY_REQUEST);
                 break;
 
-            case R.id.nav_share:
-                Toast.makeText(MainActivity.this, "공유 공유", Toast.LENGTH_SHORT).show();
+            case R.id.item_nav_credits:
                 break;
 
             default:

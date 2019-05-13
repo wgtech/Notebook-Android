@@ -130,9 +130,8 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
         binding = DataBindingUtil.setContentView(this, R.layout.activity_camera2);
         binding.setActivity(this);
         binding.tevCameraPreview.setSurfaceTextureListener(this);
+        binding.setPublishMode(true);
 
-        // Camera Rotation
-        //binding.tevCameraPreview.setTransform(getCameraMatrix());
     }
 
     private void configureTransform(int viewWidth, int viewHeight) {
@@ -430,11 +429,12 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
     }
 
     public void clickPublish(View view) {
-        if (binding.cbCameraPublish.isChecked()) {
-            Toast.makeText(this, "이 사진은 모든 사람들과 공유합니다.", Toast.LENGTH_SHORT).show();
+        if (binding.getPublishMode()) {
+            Toast.makeText(mContext, getString(R.string.msg_publish_no), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "이 사진은 나만 봅니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getString(R.string.msg_publish_okay), Toast.LENGTH_SHORT).show();
         }
+        binding.setPublishMode(!binding.getPublishMode());
     }
 
     public void clickCancel(View view) {
@@ -503,7 +503,7 @@ public class Camera2Activity extends AppCompatActivity implements TextureView.Su
                 getIntent().getStringExtra("idx"),
                 getIntent().getStringExtra("id"),
                 getIntent().getStringExtra("serviceType"),
-                binding.cbCameraPublish.isChecked() ? 1 : 0
+                binding.getPublishMode() ? 1 : 0
         );
         call.enqueue(new Callback<UserAfterCaptionedData>() {
             @Override

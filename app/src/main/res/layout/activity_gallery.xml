@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:background="@color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -51,19 +52,20 @@
             app:fabSize="auto"
             app:maxImageSize="56dp"/>
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/cb_gallery_publish"
-            android:text="Publish"
-            android:backgroundTint="@color/black"
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_gallery_publish"
             android:background="@drawable/border_rectangle"
-            android:textColor="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:onClick="@{activity::clickPublish}"
+            android:src="@{publishMode ? @drawable/users_solid : @drawable/user_solid}"
+            android:scaleType="centerInside"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:checked="true"
-            app:layout_constraintBottom_toTopOf="@id/fab_gallery_ok"
-            app:layout_constraintRight_toRightOf="@id/fab_gallery_ok"/>
+            android:onClick="@{activity::clickPublish}"
+            android:layout_marginRight="15dp"
+            app:layout_constraintRight_toLeftOf="@id/fab_gallery_ok"
+            app:layout_constraintTop_toTopOf="@id/fab_gallery_ok"
+            app:layout_constraintBottom_toBottomOf="@id/fab_gallery_ok"
+            tools:layout_editor_absoluteX="256dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -46,11 +46,11 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_drawer_name"
+            style="@style/DetailTextViewAutoScroll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"
             android:text="@string/nav_id_test"
-            android:textSize="20dp"
             app:layout_constraintLeft_toRightOf="@id/iv_drawer_service_type"
             app:layout_constraintBottom_toBottomOf="@id/iv_drawer_service_type" />
 

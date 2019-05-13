@@ -78,7 +78,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
         UsersCaptionedData data = datas.get(position);
 
         Intent i = new Intent(context, DetailActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("init", false);
         i.putExtra("position", position);
         i.putStringArrayListExtra("sentences", data.getTexts());

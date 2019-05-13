@@ -112,6 +112,7 @@
                     android:clickable="false"
                     android:showDividers="none"
                     android:dividerPadding="0dp"
+                    style="@style/DetailTextViewAutoScroll"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"

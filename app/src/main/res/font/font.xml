@@ -4,5 +4,5 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/kaushanscript_regular" />
+        android:font="@font/fredericka_the_great_regular" />
 </font-family>

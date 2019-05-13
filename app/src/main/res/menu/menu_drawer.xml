@@ -4,28 +4,28 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item android:title="Upload">
+        <item android:title="@string/menu_group_upload">
             <menu>
                 <item
                     android:id="@+id/item_nav_camera"
                     android:icon="@drawable/ic_menu_camera"
-                    android:title="Import" />
+                    android:title="@string/menu_function_camera" />
                 <item
                     android:id="@+id/item_nav_gallery"
                     android:icon="@drawable/ic_menu_gallery"
-                    android:title="Gallery" />
+                    android:title="@string/menu_function_gallery" />
 
             </menu>
         </item>
 
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/menu_group_about">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/item_nav_credits"
+                android:icon="@drawable/baseline_face_24"
+                android:title="@string/menu_function_about" />
         </menu>
     </item>
 
