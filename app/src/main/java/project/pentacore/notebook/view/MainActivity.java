@@ -7,18 +7,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.ChangeTransform;
-import androidx.transition.Scene;
+import androidx.transition.Fade;
+import androidx.transition.Transition;
+import androidx.transition.TransitionInflater;
 import androidx.transition.TransitionManager;
-import androidx.transition.TransitionValues;
-import androidx.vectordrawable.graphics.drawable.AnimationUtilsCompat;
 
 import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
@@ -39,8 +37,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -228,7 +224,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ///////////////////////////////////////
 
     public void clickQuickFab(View view) {
-        binding.viewIncludeMain.setFabClickMode(! binding.viewIncludeMain.getFabClickMode());
+        boolean isFabClick = binding.viewIncludeMain.getFabClickMode();
+
+        if (isFabClick) {
+            Transition t = TransitionInflater.from(mContext).inflateTransition(R.transition.trans_fab_rotate_off);
+            TransitionManager.beginDelayedTransition(binding.viewIncludeMain.mainLayout, t);
+        } else {
+            Transition t = TransitionInflater.from(mContext).inflateTransition(R.transition.trans_fab_rotate_on);
+            TransitionManager.beginDelayedTransition(binding.viewIncludeMain.mainLayout, t);
+        }
+
+        binding.viewIncludeMain.setFabClickMode(!isFabClick);
     }
 
     public void clickCameraFab(View view) {

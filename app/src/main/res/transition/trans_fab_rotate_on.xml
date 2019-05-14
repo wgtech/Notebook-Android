@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:transitionOrdering="together">
+
+    <changeTransform
+        android:duration="300"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:reparent="true" />
+
+    <fade
+        android:duration="300"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:fadingMode="fade_in" />
+
+</transitionSet>
