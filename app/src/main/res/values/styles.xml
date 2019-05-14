@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/white</item>
         <item name="android:statusBarColor">@color/gray</item>
         <item name="android:colorBackground">@color/white</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/black</item>
         <item name="android:fontFamily">@font/font</item>
 
         <item name="android:windowContentTransitions">true</item>
@@ -28,14 +28,14 @@
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <!--<item name="android:windowEnterTransition">@transition/card_popup</item>-->
-        <!--<item name="android:windowExitTransition">@transition/card_popup</item>-->
-        <!--<item name="android:windowReenterTransition">@transition/card_popup</item>-->
-        <!--<item name="android:windowReturnTransition">@transition/card_popup</item>-->
-        <item name="android:windowSharedElementEnterTransition">@transition/card_popup</item>
-        <item name="android:windowSharedElementExitTransition">@transition/card_popup</item>
-        <item name="android:windowSharedElementReenterTransition">@transition/card_popup</item>
-        <item name="android:windowSharedElementReturnTransition">@transition/card_popup</item>
+        <!--<item name="android:windowEnterTransition">@transition/trans_card_popup</item>-->
+        <!--<item name="android:windowExitTransition">@transition/trans_card_popup</item>-->
+        <!--<item name="android:windowReenterTransition">@transition/trans_card_popup</item>-->
+        <!--<item name="android:windowReturnTransition">@transition/trans_card_popup</item>-->
+        <item name="android:windowSharedElementEnterTransition">@transition/trans_card_popup</item>
+        <item name="android:windowSharedElementExitTransition">@transition/trans_card_popup</item>
+        <item name="android:windowSharedElementReenterTransition">@transition/trans_card_popup</item>
+        <item name="android:windowSharedElementReturnTransition">@transition/trans_card_popup</item>
     </style>
 
     <style name="DetailTextViewAutoScroll">

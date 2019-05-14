@@ -7,12 +7,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.ChangeTransform;
+import androidx.transition.Scene;
+import androidx.transition.TransitionManager;
+import androidx.transition.TransitionValues;
+import androidx.vectordrawable.graphics.drawable.AnimationUtilsCompat;
 
 import okhttp3.ResponseBody;
 import project.pentacore.notebook.R;
@@ -33,6 +39,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -151,8 +159,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_menu_black_36);
         getSupportActionBar().setTitle("");
 
+        binding.viewIncludeMain.setFabClickMode(false);
         binding.viewIncludeMain.fab.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Click! Click!", Toast.LENGTH_SHORT).show();
+            clickQuickFab(view);
+        });
+        binding.viewIncludeMain.fabMainCamera.setOnClickListener(view -> {
+            clickCameraFab(view);
+        });
+        binding.viewIncludeMain.fabMainGallery.setOnClickListener(view -> {
+            clickGalleryFab(view);
         });
 
         View nav = binding.nvMain.getHeaderView(0);
@@ -211,6 +226,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     ///////////////////////////////////////
+
+    public void clickQuickFab(View view) {
+        binding.viewIncludeMain.setFabClickMode(! binding.viewIncludeMain.getFabClickMode());
+    }
+
+    public void clickCameraFab(View view) {
+        Intent camera = new Intent(MainActivity.this, Camera2Activity.class);
+        camera.putExtra("idx", info.getIdx());
+        camera.putExtra("id", info.getId());
+        camera.putExtra("serviceType", info.getServiceType());
+        startActivityForResult(camera, Constants.CAMERA_REQUEST);
+    }
+
+    public void clickGalleryFab(View view) {
+        Intent gallery = new Intent(MainActivity.this, GalleryActivity.class);
+        gallery.putExtra("idx", info.getIdx());
+        gallery.putExtra("id", info.getId());
+        gallery.putExtra("serviceType", info.getServiceType());
+        startActivityForResult(gallery, Constants.GALLERY_REQUEST);
+    }
 
     @Override
     protected void onResume() {

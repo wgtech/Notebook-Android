@@ -4,13 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="activity"
             type="project.pentacore.notebook.view.MainActivity" />
+        <variable
+            name="fabClickMode"
+            type="java.lang.Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:theme="@style/AppTheme"
@@ -78,11 +81,43 @@
             android:backgroundTint="@color/white"
             android:scaleType="fitCenter"
             android:src="@drawable/baseline_add_circle_black_48"
-
+            android:transitionName="@string/transition_fab_rotate"
             app:fabSize="auto"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:maxImageSize="56dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_main_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="@{fabClickMode ? true : false}"
+            android:visibility="@{fabClickMode ? View.VISIBLE : View.GONE}"
+            android:src="@drawable/ic_menu_gallery"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            app:fabSize="mini"
+            app:layout_constraintLeft_toLeftOf="@id/fab"
+            app:layout_constraintRight_toRightOf="@id/fab"
+            app:layout_constraintBottom_toTopOf="@id/fab"
+            app:maxImageSize="24dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_main_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="@{fabClickMode ? true : false}"
+            android:visibility="@{fabClickMode ? View.VISIBLE : View.GONE}"
+            android:src="@drawable/ic_menu_camera"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            app:fabSize="mini"
+            app:layout_constraintLeft_toLeftOf="@id/fab_main_gallery"
+            app:layout_constraintRight_toRightOf="@id/fab_main_gallery"
+            app:layout_constraintBottom_toTopOf="@id/fab_main_gallery"
+            app:maxImageSize="24dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -36,6 +36,9 @@
     <string name="nav_id_test">Android Studio</string>
     <string name="action_settings">Settings</string>
 
+    <!-- View in View -->
+    <string name="transition_fab_rotate">fab_rotate</string>
+
     <!-- Dialog -->
     <string name="dialog_question_logout">로그아웃 하시겠습니까?</string>
     <string name="dialog_question_delete">정말 삭제하시겠습니까?</string>
