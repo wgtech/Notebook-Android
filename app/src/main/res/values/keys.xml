@@ -6,7 +6,7 @@
     <string name="naver_client_id">eSp9Qh3o0n6xt21BDo57</string>
     <string name="naver_client_secret">KKLBDCiuA7</string>
 
-    <string name="server_ipv4">http://192.168.22.58:8000</string>
+    <string name="server_ipv4">http://192.168.22.69:8008</string>
     <!--<string name="server_ipv4">http://192.168.103.101:8001</string>-->
 
 </resources>

@@ -52,7 +52,7 @@
 
     <!-- SplashActivity -->
     <style name="SplashStyle" parent="FullScreenTheme">
-        <item name="android:windowBackground">@drawable/ic_launcher_background</item>
+        <item name="android:colorBackground">@color/white</item>
     </style>
 
     <!-- Toolbar Font -->

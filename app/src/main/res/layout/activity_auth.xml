@@ -27,7 +27,7 @@
                 android:id="@+id/tv_auth_inner_logo"
                 android:text="@string/app_name"
                 android:fontFamily="@font/font"
-                android:textSize="55dp"
+                android:textSize="40dp"
                 android:textColor="@color/black"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
